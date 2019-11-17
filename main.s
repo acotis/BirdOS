@@ -15,7 +15,7 @@ _start:
 	mov	r4, #0
 	
 s_str_loop$:
-	teq	r4, #12
+	teq	r4, #18
 	beq	plain_loop$
 	
 	mov	r0, r4

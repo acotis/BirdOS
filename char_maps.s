@@ -177,6 +177,91 @@ CharacterMaps:
 	.byte 0b01000010
 	.byte 0b00111100
 	.byte 0b00000000
+
+	// 12 - Letter A
+	.byte 0b00000000
+	.byte 0b00111100
+	.byte 0b01000010
+	.byte 0b01000010
+	.byte 0b01000010
+	.byte 0b01000010
+	.byte 0b01111110
+	.byte 0b01000010
+	.byte 0b01000010
+	.byte 0b01000010
+	.byte 0b01000010
+	.byte 0b00000000
+
+	// 13 - Letter B
+	.byte 0b00000000
+	.byte 0b01111100
+	.byte 0b01000010
+	.byte 0b01000010
+	.byte 0b01000010
+	.byte 0b01111100
+	.byte 0b01000010
+	.byte 0b01000010
+	.byte 0b01000010
+	.byte 0b01000010
+	.byte 0b01111100
+	.byte 0b00000000
+
+	// 14 - Letter C
+	.byte 0b00000000
+	.byte 0b00111100
+	.byte 0b01000010
+	.byte 0b01000010
+	.byte 0b01000000
+	.byte 0b01000000
+	.byte 0b01000000
+	.byte 0b01000000
+	.byte 0b01000010
+	.byte 0b01000010
+	.byte 0b00111100
+	.byte 0b00000000
+	
+	// 15 - Letter D
+	.byte 0b00000000
+	.byte 0b01111100
+	.byte 0b01000010
+	.byte 0b01000010
+	.byte 0b01000010
+	.byte 0b01000010
+	.byte 0b01000010
+	.byte 0b01000010
+	.byte 0b01000010
+	.byte 0b01000010
+	.byte 0b01111100
+	.byte 0b00000000
+
+	// 16 - Letter E
+	.byte 0b00000000
+	.byte 0b01111110
+	.byte 0b01000000
+	.byte 0b01000000
+	.byte 0b01000000
+	.byte 0b01111100
+	.byte 0b01000000
+	.byte 0b01000000
+	.byte 0b01000000
+	.byte 0b01000000
+	.byte 0b01111110
+	.byte 0b00000000
+	
+	// 7 - Letter F
+	.byte 0b00000000
+	.byte 0b01111110
+	.byte 0b01000000
+	.byte 0b01000000
+	.byte 0b01000000
+	.byte 0b01111100
+	.byte 0b01000000
+	.byte 0b01000000
+	.byte 0b01000000
+	.byte 0b01000000
+	.byte 0b01000000
+	.byte 0b00000000
+	
 	
 	
 CharacterSize:
