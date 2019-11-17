@@ -1,5 +1,5 @@
 
-DEPS = main.o screen.o
+DEPS = main.o screen.o text.o
 
 
 %.o: %.s

@@ -4,6 +4,9 @@
 	.globl GetFrameBufferPointerReal
 	.globl GetFrameBufferPointerQEMU
 
+	.globl GetScreenByteWidthReal
+	.globl GetScreenByteWidthQEMU
+	
 // Data
 	
 	.section .data
@@ -101,5 +104,22 @@ GetFrameBufferPointerReal:
 // buffer that QEMU provides
 
 GetFrameBufferPointerQEMU:
-	ldr	r0, =0x3C100000 // Determined manually and might be broken
+	ldr	r0, =0x3C100000	// Determined manually and might be broken
+	mov	pc, lr
+
+	
+// GetScreenByteWidthReal: return the size of the virtual buffer that the GPU
+// approved of.
+
+GetScreenByteWidthReal:
+	ldr	r0, =FrameBufferInfo
+	ldr	r0, [r0, #0x10]
+	mov	pc, lr
+
+
+// GetScreenByteWidthQEMU: just return the size of the virtual buffer that
+// QEMU appears to provide
+
+GetScreenByteWidthQEMU:
+	mov	r0, #1280	// 640 pixels x 2 bytes per pixel
 	mov	pc, lr
