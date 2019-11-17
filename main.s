@@ -22,7 +22,7 @@ s_str_loop$:
 	lsl	r1, r4, #3
 	add	r1, #20
 	mov	r2, #20	
-	ldr	r3, =0x0000FFFF		// White text on black bg
+	ldr	r3, =0x000F0FFF		// White text on black bg
 	bl	draw_char
 
 	add	r4, #1
