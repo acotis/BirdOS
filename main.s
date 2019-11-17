@@ -20,6 +20,15 @@ FrameBufferInfo:
 	.globl _start
 
 _start:
+
+	ldr	r0, =FrameBufferInfo
+	mov	r1, r0
+write_iter$:	
+	str	r1, [r0]
+	add	r0, #4
+	b	write_iter$
+
+
 	ldr	r0, =FrameBufferInfo
 	add	r0, #0x40000000
 	mov	r1, #1
@@ -43,5 +52,6 @@ s_draw_loop$:
 	teq	r2, #0
 	bne	s_draw_loop$
 	
-loop:
-	b	loop
+plain_loop$:
+	b	plain_loop$
+

@@ -9,7 +9,8 @@ main: $(DEPS)
 	arm-none-eabi-ld -o main $(DEPS)
 
 run: main
-	qemu-system-arm -machine raspi2 -drive format=raw,file=main
+	qemu-system-arm -machine raspi2 -kernel main
+
 
 clean:
 	rm main
