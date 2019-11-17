@@ -1,9 +1,31 @@
 
+// Exports
+	
+	.globl GetFrameBufferPointerReal
+	.globl GetFrameBufferPointerQEMU
+
+// Data
+	
+	.section .data
+	.align 4
+	
+FrameBufferInfo:
+	.int 1024	// Physical width
+	.int 768	// Physical height
+	.int 1024	// Virtual width
+	.int 768	// Virtual height
+	.int 0		// GPU pitch (filled in by GPU)
+	.int 16		// Bit depth (high color)
+	.int 0		// X offset
+	.int 0		// Y offset
+	.int 0		// Pointer to frame (filled in by GPU)
+	.int 0		// Size of frame (filled in by GPU)
+
+
+// Code
+	
 	.section .text
 	.align 2
-
-	.globl MailboxWrite
-	.globl MailboxRead
 	
 // MailboxWrite: Write a message to a given mailbox
 //
@@ -41,7 +63,7 @@ mr_status_loop$:
 	ldr	r2, [r1, #0x18]		// Make sure 30th bit of Status field
 	tst	r2, #0x40000000		// is zero
 	bne	mr_status_loop$
-
+		
 	// Read from the Read field until the mailbox is correct
 	
 mr_mailbox_loop$:	
@@ -50,6 +72,34 @@ mr_mailbox_loop$:
 	and	r3, r2, #0b1111		// Make sure bottom 4 bits match r0
 	teq	r3, r0
 	bne	mr_mailbox_loop$
-
+	
 	and	r0, r2, #0xFFFFFFF0
+	mov	pc, lr
+
+
+// GetFrameBufferPointerReal: Set up a frame buffer the real way and return
+// a pointer to it
+
+GetFrameBufferPointerReal:
+	push	{lr}
+	mov	r0, #1
+	ldr	r1, =FrameBufferInfo
+	add	r1, #0x40000000
+	bl	MailboxWrite
+	
+	mov	r0, #1
+	bl	MailboxRead
+
+	// TODO: Check if this is actually zero or not
+
+	ldr	r0, =FrameBufferInfo
+	ldr	r0, [r0, #0x20]
+	pop	{pc}
+
+
+// GetFrameBufferPointerQEMU: Just return the pointer to the default frame
+// buffer that QEMU provides
+
+GetFrameBufferPointerQEMU:
+	ldr	r0, =0x3C100000 // Determined manually and might be broken
 	mov	pc, lr

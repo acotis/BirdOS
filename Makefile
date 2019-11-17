@@ -1,5 +1,5 @@
 
-DEPS = main.o mailbox.o
+DEPS = main.o screen.o
 
 
 %.o: %.s
