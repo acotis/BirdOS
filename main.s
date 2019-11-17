@@ -12,28 +12,21 @@
 _start:
 	// Color the top of the screen cyan
 	
-	bl	GetFrameBufferPointerQEMU
-	ldr	r1, =0x07FF		// r1 . color
-	mov	r2, #640		// r2 . number of pixels to write
 
-write_iter$:
-	strh	r1, [r0]
+	mov	r3, #0x0		// r3 . counter
+color_loop$:				// r0 . address of next pixel
+	bl	GetFrameBufferPointerQEMU 
+	ldr	r1, =0x4B000		// r1 . number of pixels on a screen
+	lsr	r2, r3, #5		// r2 . color
+	
+write_loop$:
+	strh	r2, [r0]
 	add	r0, #2
+	subs	r1, #1
+	bne	write_loop$
 
-	subs	r2, #1
-	bne	write_iter$
-
-	// Color the left side of the screen red
-
-	bl	GetFrameBufferPointerQEMU
-	ldr	r1, =0xF800
-	mov	r2, #480
-write_iter2$:
-	strh	r1, [r0]
-	add	r0, #1280
-
-	subs	r2, #1
-	bne	write_iter2$
+	add	r3, #1
+	b	color_loop$
 
 plain_loop$:
 	b	plain_loop$
