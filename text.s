@@ -4,59 +4,13 @@
 	.globl GetFrameBufferPointerQEMU
 	.globl GetScreenByteWidthQEMU
 	
+	.globl CharacterMaps
+	.globl CharacterSize
+	
 // Exports
 
 	.globl draw_char
 
-// Character maps
-	
-	.section .data
-	.align 4
-
-CharacterMaps:
-	.byte 0b11111111
-	.byte 0b11111110
-	.byte 0b11111100
-	.byte 0b11111000
-	.byte 0b11110001
-	.byte 0b11100011
-	.byte 0b11000111
-	.byte 0b10001111
-	.byte 0b00011111
-	.byte 0b00111111
-	.byte 0b01111111
-	.byte 0b11111111
-	
-	.byte 0b00000000		// Digit 0
-	.byte 0b00111100
-	.byte 0b01000010
-	.byte 0b01000010
-	.byte 0b01000010
-	.byte 0b01000010
-	.byte 0b01000010
-	.byte 0b01000010
-	.byte 0b01000010
-	.byte 0b01000010
-	.byte 0b00111100
-	.byte 0b00000000
-	
-	.byte 0b00000000		// Digit 1
-	.byte 0b00011000
-	.byte 0b00101000
-	.byte 0b01001000
-	.byte 0b00001000
-	.byte 0b00001000
-	.byte 0b00001000
-	.byte 0b00001000
-	.byte 0b00001000
-	.byte 0b00001000
-	.byte 0b01111110
-	.byte 0b00000000
-
-CharacterSize:
-	.int 12		// 8 bits widt, 12 bits tall
-
-	
 // Code
 	
 	.section .text
