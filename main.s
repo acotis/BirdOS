@@ -2,7 +2,8 @@
 // Imports
 
 	.globl draw_string
-
+	.globl draw_num_hex_32
+	
 // Exports
 
 	.globl _start
@@ -40,11 +41,17 @@ _start:
 	ldr	sp, =0x18000		// STACK BASE
 
 	ldr	r0, =String
-	add	r1, #20
+	mov	r1, #20
 	mov	r2, #20	
 	ldr	r3, =0x000F0FFF		// White text on black bg
 	bl	draw_string
 
+	ldr	r0, =0xDE3D0EEF
+	mov	r1, #20
+	mov	r2, #40
+	ldr	r3, =0x7000FFE0
+	bl	draw_num_hex_32
+	
 plain_loop$:
 	b	plain_loop$
 
