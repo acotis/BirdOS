@@ -10,6 +10,7 @@
 // Exports
 
 	.globl draw_char
+	.globl draw_string
 
 // Code
 	
@@ -88,4 +89,35 @@ dc_row_loop_end$:
 	pop	{r4, r5, r6, pc}
 	
 
+// draw_string: draw a null-terminatred string located at memory location r0
+// beginning at x-offset r1 and y-offset r2 with colors r3	
+//
+//	r0 . Memory location of the string
+//	r1 . x-offset of first character
+//	r2 . y-offset of first character
+//	r3 . BG color (top 16 bits) and FG color (bottom 16 bits)
+
+draw_string:
+	push	{r4, r5, r6, r7, lr}
+
+	mov	r4, r0			// r4 . Memory location of the string
+	mov	r5, r1			// r5 . x-offset
+	mov	r6, r2			// r6 . y-offset
+	mov	r7, r3			// r7 . colors
+
+ds_char_loop$:
+	ldrb	r0, [r4]
+	teq	r0, #0
+	beq	ds_char_end$
 	
+	mov	r1, r5
+	mov	r2, r6
+	mov	r3, r7
+	bl	draw_char
+
+	add	r4, #1
+	add	r5, #8
+	b	ds_char_loop$
+
+ds_char_end$:
+	pop	{r4, r5, r6, r7, pc}
