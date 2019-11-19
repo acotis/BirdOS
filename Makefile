@@ -1,5 +1,5 @@
 
-DEPS = main.o screen.o text.o char_maps.o
+DEPS = main.o screen.o text/char_maps.o text/string.o text/text.o
 
 
 %.o: %.s
@@ -13,5 +13,6 @@ run: main
 
 
 clean:
-	rm main
-	rm *.o
+	rm -f main
+	rm -f *.o
+	rm -f text/*.o

@@ -2,7 +2,7 @@
 // Exports
 
 	.globl	CharacterMaps
-	.globl	CharacterSize
+	.globl	CharacterHeight
 	
 // Character maps
 	
@@ -23,8 +23,16 @@ CharacterMaps:
 	.byte 0b00111111
 	.byte 0b01111111
 	.byte 0b11111111
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
 
 	// 1 - Empty
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
 	.byte 0b00000000
 	.byte 0b00000000
 	.byte 0b00000000
@@ -51,6 +59,10 @@ CharacterMaps:
 	.byte 0b01000010
 	.byte 0b00111100
 	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
 
 	// 3 - Digit 1
 	.byte 0b00000000
@@ -64,6 +76,10 @@ CharacterMaps:
 	.byte 0b00001000
 	.byte 0b00001000
 	.byte 0b01111110
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
 	.byte 0b00000000
 
 	// 4 - Digit 2
@@ -79,6 +95,10 @@ CharacterMaps:
 	.byte 0b01000000
 	.byte 0b01111110
 	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
 
 	// 5 - Digit 3
 	.byte 0b00000000
@@ -92,6 +112,10 @@ CharacterMaps:
 	.byte 0b00000010
 	.byte 0b01000010
 	.byte 0b00111100
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
 	.byte 0b00000000
 
 	// 6 - digit 4
@@ -107,6 +131,10 @@ CharacterMaps:
 	.byte 0b00000010
 	.byte 0b00000010
 	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
 
 	// 7 - Digit 5
 	.byte 0b00000000
@@ -120,6 +148,10 @@ CharacterMaps:
 	.byte 0b00000010
 	.byte 0b00000010
 	.byte 0b01111100
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
 	.byte 0b00000000
 
 	// 8 - Digit 6
@@ -135,6 +167,10 @@ CharacterMaps:
 	.byte 0b01000010
 	.byte 0b00111100
 	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
 
 	// 9 - Digit 7
 	.byte 0b00000000
@@ -148,6 +184,10 @@ CharacterMaps:
 	.byte 0b00010000
 	.byte 0b00100000
 	.byte 0b00100000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
 	.byte 0b00000000
 
 	// 10 - Digit 8
@@ -163,6 +203,10 @@ CharacterMaps:
 	.byte 0b01000010
 	.byte 0b00111100
 	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
 
 	// 11 - Digit 9
 	.byte 0b00000000
@@ -176,6 +220,10 @@ CharacterMaps:
 	.byte 0b00000010
 	.byte 0b01000010
 	.byte 0b00111100
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
 	.byte 0b00000000
 
 	// 12 - Letter A
@@ -191,6 +239,10 @@ CharacterMaps:
 	.byte 0b01000010
 	.byte 0b01000010
 	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
 
 	// 13 - Letter B
 	.byte 0b00000000
@@ -204,6 +256,10 @@ CharacterMaps:
 	.byte 0b01000010
 	.byte 0b01000010
 	.byte 0b01111100
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
 	.byte 0b00000000
 
 	// 14 - Letter C
@@ -219,6 +275,10 @@ CharacterMaps:
 	.byte 0b01000010
 	.byte 0b00111100
 	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
 	
 	// 15 - Letter D
 	.byte 0b00000000
@@ -232,6 +292,10 @@ CharacterMaps:
 	.byte 0b01000010
 	.byte 0b01000010
 	.byte 0b01111100
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
 	.byte 0b00000000
 
 	// 16 - Letter E
@@ -247,6 +311,10 @@ CharacterMaps:
 	.byte 0b01000000
 	.byte 0b01111110
 	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
 	
 	// 7 - Letter F
 	.byte 0b00000000
@@ -261,8 +329,11 @@ CharacterMaps:
 	.byte 0b01000000
 	.byte 0b01000000
 	.byte 0b00000000
-	
-	
-	
-CharacterSize:
-	.int 12		// 8 bits wide x 12 bits tall = 12 bytes total
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+	.byte 0b00000000
+		
+
+CharacterHeight:
+	.int 16
