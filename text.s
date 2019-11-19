@@ -162,4 +162,4 @@ dnh_digit_loop$:
 	b	dnh_digit_loop$		// (if it's not zero yet, loop again)
 
 dnh_digit_end$:	
-	pop	{r4, r5, r6, r7, r8, pc}
+	pop	{r4, r5, r6, r7, r8, r9, pc}
