@@ -4,7 +4,7 @@
 	.globl	CharacterMaps
 	.globl	CharacterHeight
 
-// Example
+// Examples
 
 //	01234567
 //    0	........ 
@@ -23,6 +23,25 @@
 //    D	........
 //    E	........
 //    F	........
+
+//	01234567
+//    0	........ 
+//    1	........	+ Short character tops out at line 5
+//    2	........
+//    3	........
+//    4	........
+//    5	..1111..
+//    6	.1....1.
+//    7	.111111.
+//    8	.1......
+//    9	.1....1.
+//    A	..1111..
+//    B	........
+//    C	........
+//    D	........
+//    E	........
+//    F	........
+
 
 	
 // Character maps
@@ -1227,9 +1246,9 @@ CharacterMaps:
 	.byte 0b00000000
 	.byte 0b00000000
 	.byte 0b00000000
+	.byte 0b00000000
 	.byte 0b00111100
 	.byte 0b01000010
-	.byte 0b00000010
 	.byte 0b00111110
 	.byte 0b01000010
 	.byte 0b01000010
@@ -1245,9 +1264,9 @@ CharacterMaps:
 	.byte 0b01000000
 	.byte 0b01000000
 	.byte 0b01000000
+	.byte 0b01000000
 	.byte 0b01011100
 	.byte 0b01100010
-	.byte 0b01000010
 	.byte 0b01000010
 	.byte 0b01000010
 	.byte 0b01000010
@@ -1263,9 +1282,9 @@ CharacterMaps:
 	.byte 0b00000000
 	.byte 0b00000000
 	.byte 0b00000000
+	.byte 0b00000000
 	.byte 0b00111100
 	.byte 0b01000010
-	.byte 0b01000000
 	.byte 0b01000000
 	.byte 0b01000000
 	.byte 0b01000010
@@ -1281,9 +1300,9 @@ CharacterMaps:
 	.byte 0b00000010
 	.byte 0b00000010
 	.byte 0b00000010
+	.byte 0b00000010
 	.byte 0b00111010
 	.byte 0b01000110
-	.byte 0b01000010
 	.byte 0b01000010
 	.byte 0b01000010
 	.byte 0b01000010
@@ -1299,8 +1318,8 @@ CharacterMaps:
 	.byte 0b00000000
 	.byte 0b00000000
 	.byte 0b00000000
+	.byte 0b00000000
 	.byte 0b00111100
-	.byte 0b01000010
 	.byte 0b01000010
 	.byte 0b01111110
 	.byte 0b01000000
@@ -1388,17 +1407,17 @@ CharacterMaps:
 	.byte 0b00000000
 	.byte 0b00000000
 	.byte 0b00000000
+	.byte 0b00010000
 	.byte 0b00001000
-	.byte 0b00000100
 	.byte 0b00000000
-	.byte 0b00001100
-	.byte 0b00000100
-	.byte 0b00000100
-	.byte 0b00000100
-	.byte 0b00000100
-	.byte 0b00000100
-	.byte 0b01000100
-	.byte 0b00111000
+	.byte 0b00011000
+	.byte 0b00001000
+	.byte 0b00001000
+	.byte 0b00001000
+	.byte 0b00001000
+	.byte 0b00001000
+	.byte 0b10001000
+	.byte 0b01110000
 	.byte 0b00000000
 	.byte 0b00000000
 
@@ -1423,15 +1442,15 @@ CharacterMaps:
 	// 108 - Lower case l
 	.byte 0b00000000
 	.byte 0b00000000
-	.byte 0b00011000
-	.byte 0b00001000
-	.byte 0b00001000
-	.byte 0b00001000
-	.byte 0b00001000
-	.byte 0b00001000
-	.byte 0b00001000
-	.byte 0b00001000
-	.byte 0b00011100
+	.byte 0b00110000
+	.byte 0b00010000
+	.byte 0b00010000
+	.byte 0b00010000
+	.byte 0b00010000
+	.byte 0b00010000
+	.byte 0b00010000
+	.byte 0b00010000
+	.byte 0b01111100
 	.byte 0b00000000
 	.byte 0b00000000
 	.byte 0b00000000
@@ -1444,12 +1463,12 @@ CharacterMaps:
 	.byte 0b00000000
 	.byte 0b00000000
 	.byte 0b00000000
-	.byte 0b01101100
-	.byte 0b01010010
-	.byte 0b01010010
-	.byte 0b01010010
-	.byte 0b01010010
-	.byte 0b01010010
+	.byte 0b01111110
+	.byte 0b01001001
+	.byte 0b01001001
+	.byte 0b01001001
+	.byte 0b01001001
+	.byte 0b01001001
 	.byte 0b00000000
 	.byte 0b00000000
 	.byte 0b00000000

@@ -19,6 +19,9 @@ Line3:
 	.zero 65
 Line4:
 	.zero 65
+
+String:
+	.asciz "Hello world, this is a program (by Evan Rysdam). monopoly"
 	
 // Code
 
@@ -71,6 +74,12 @@ s_fill_loop$:
 	mov	r1, #3
 	mov	r2, #0
 	ldr	r3, =0xFFFF0000
+	bl	draw_textline
+
+	ldr	r0, =String
+	mov	r1, #5
+	mov	r2, #0
+	ldr	r3, =0x0000FFFF
 	bl	draw_textline
 	
 s_plain_loop$:
