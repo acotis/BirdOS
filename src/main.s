@@ -42,19 +42,19 @@ _start:
 	ldr	r0, =String
 	mov	r1, #0
 	mov	r2, #0	
-	ldr	r3, =0x000F0FFF	
+	ldr	r3, =0x00000FFF	
 	bl	draw_textline
 
 	ldr	r0, =String
 	mov	r1, #2
 	mov	r2, #0
-	ldr	r3, =0xFFFF0000
+	ldr	r3, =0x0000F000
 	bl	draw_textline
 
 	ldr	r0, =String
 	mov	r1, #1
 	mov	r2, #0
-	ldr	r3, =0xF800FFFF
+	ldr	r3, =0x0000FFFF
 	bl	draw_textline
 	
 plain_loop$:

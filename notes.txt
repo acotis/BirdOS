@@ -1,0 +1,5 @@
+
+When scanning through memory starting at address 0x0, the largest memory
+address appears to be 0x3F006FFF (one before 0x3F007000) which is about
+512 MB of memory. It seems that I can access higher memory locations if I
+start far above 0x0 (such as starting at 0x10000000).
