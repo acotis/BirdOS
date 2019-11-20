@@ -21,7 +21,7 @@ Line4:
 	.zero 65
 
 String:
-	.asciz "Hello world, this is a program (by Evan Rysdam). monopoly"
+	.asciz "Hello world, this is a program (by Evan Rysdam). minimum. joke. kaj"
 	
 // Code
 

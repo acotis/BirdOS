@@ -1389,10 +1389,10 @@ CharacterMaps:
 	.byte 0b00000000
 	.byte 0b00000000
 	.byte 0b00000000
-	.byte 0b00010000
 	.byte 0b00001000
 	.byte 0b00000000
 	.byte 0b00011000
+	.byte 0b00001000
 	.byte 0b00001000
 	.byte 0b00001000
 	.byte 0b00001000
@@ -1407,10 +1407,10 @@ CharacterMaps:
 	.byte 0b00000000
 	.byte 0b00000000
 	.byte 0b00000000
-	.byte 0b00010000
 	.byte 0b00001000
 	.byte 0b00000000
 	.byte 0b00011000
+	.byte 0b00001000
 	.byte 0b00001000
 	.byte 0b00001000
 	.byte 0b00001000
@@ -1426,13 +1426,13 @@ CharacterMaps:
 	.byte 0b00000000
 	.byte 0b01000000
 	.byte 0b01000000
-	.byte 0b01000000
+	.byte 0b01000100
 	.byte 0b01001000
 	.byte 0b01010000
-	.byte 0b01100000
-	.byte 0b01010000
+	.byte 0b01110000
 	.byte 0b01001000
 	.byte 0b01000100
+	.byte 0b01000010
 	.byte 0b00000000
 	.byte 0b00000000
 	.byte 0b00000000
