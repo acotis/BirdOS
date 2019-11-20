@@ -22,6 +22,11 @@ Line4:
 
 String:
 	.asciz "Hello world, this is a program (by Evan Rysdam). minimum. joke. kaj"
+String2:
+	.asciz "\"Shh,\" he said. \"It goes without saying!\"."
+
+String3:
+	.asciz "\"Ain't\" isn't a word."
 	
 // Code
 
@@ -78,6 +83,18 @@ s_fill_loop$:
 
 	ldr	r0, =String
 	mov	r1, #5
+	mov	r2, #0
+	ldr	r3, =0x0000FFFF
+	bl	draw_textline
+
+	ldr	r0, =String2
+	mov	r1, #7
+	mov	r2, #0
+	ldr	r3, =0x0000FFFF
+	bl	draw_textline
+
+	ldr	r0, =String3
+	mov	r1, #9
 	mov	r2, #0
 	ldr	r3, =0x0000FFFF
 	bl	draw_textline

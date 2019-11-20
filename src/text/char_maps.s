@@ -109,9 +109,9 @@ CharacterMaps:
 
 	// 34 - Double quote
 	.byte 0b00000000
-	.byte 0b01100110
-	.byte 0b01100110
-	.byte 0b01100110
+	.byte 0b00100100
+	.byte 0b00100100
+	.byte 0b00100100
 	.byte 0b00000000
 	.byte 0b00000000
 	.byte 0b00000000
@@ -199,10 +199,10 @@ CharacterMaps:
 
 	// 39 - Single quote
 	.byte 0b00000000
-	.byte 0b00011000
-	.byte 0b00011000
-	.byte 0b00011000
 	.byte 0b00000000
+	.byte 0b00001000
+	.byte 0b00001000
+	.byte 0b00001000
 	.byte 0b00000000
 	.byte 0b00000000
 	.byte 0b00000000
@@ -299,8 +299,8 @@ CharacterMaps:
 	.byte 0b00000000
 	.byte 0b00000000
 	.byte 0b00011000
+	.byte 0b00011000
 	.byte 0b00110000
-	.byte 0b01000000
 	.byte 0b00000000
 	.byte 0b00000000
 	.byte 0b00000000
