@@ -1,4 +1,2 @@
 
-+ Move git file to root directory
-
 + Add more characters and move them to their ascii values
