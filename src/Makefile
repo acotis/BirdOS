@@ -1,5 +1,5 @@
 
-DEPS = main.o screen.o text/char_maps.o text/string.o text/text.o text/cursor.o
+DEPS = main.o screen.o text/char_maps.o text/string.o text/text.o text/cursor.o text/text_test.o text/convert.o
 
 
 %.o: %.s
