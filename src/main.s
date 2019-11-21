@@ -1,7 +1,11 @@
 
 // Imports
 
-	.globl draw_textline
+	.globl set_cursor
+	.globl newline
+	.globl print
+
+	.globl draw_num_hex_32
 	
 // Exports
 
@@ -21,16 +25,25 @@ Line4:
 	.zero 65
 
 String:
-	.asciz "Hello world, this is a program (by Evan Rysdam). minimum. joke. kaj. Also, now I've implemented smart line-wrapping, so I don't have to constantly split the strings I want to split into lots of pieces. It just handles it automatically. I can even put in newline characters myself,\nlike this."
+	.asciz "Hello world, this is a program (by Evan Rysdam). minimum. joke. kaj. Also, now I've implemented smart line-wrapping, so I don't have to constantly split the strings I want to split into lots of pieces. It just handles it automatically. I can even put in newline characters myself,\nlike this.\n\n"
 	
 String2:
-	.asciz "\"Shh,\" he said. \"It goes without saying!\".\n"
+	.asciz "\"Shh,\" he said. \"It goes without saying!\".\n\n"
 
 String3:
 	.asciz "\"Ain't\" isn't a word."
 
 String4:
-	.asciz "0         1         2         3         4         5         6         7        0123456789012345678901234567890123456789012345678901234567890123456789012345678"
+	.ascii "0         1         2         3         4         "
+        .ascii "5         6         7        "
+	.ascii "01234567890123456789012345678901234567890123456789"
+	.asciz "01234567890123456789012345678"
+
+String5:
+	.asciz "Right arrow -->"
+
+String6:	
+	.asciz "<-- left arrow"
 	
 // Code
 
@@ -58,79 +71,87 @@ s_fill_loop$:
 	teq	r1, #256
 	bne	s_fill_loop$
 	
-	// Draw the string as a line of text
-	
-	ldr	r0, =Line1
-	add	r0, #32
-	mov	r1, #0
-	mov	r2, #32	
-	ldr	r3, =0x000006FF	
-	bl	draw_textline
-	
-	ldr	r0, =Line2
-	mov	r1, #1
-	mov	r2, #0
-	ldr	r3, =0x000006FF
-	bl	draw_textline
+	// Print the strings
 
-	ldr	r0, =Line3
-	mov	r1, #2
-	mov	r2, #0
-	ldr	r3, =0x0FF0FFFF
-	bl	draw_textline
-
-	ldr	r0, =Line4
-	mov	r1, #3
-	mov	r2, #0
-	ldr	r3, =0xFFFF0000
-	bl	draw_textline
+	mov	r0, #0			// Set cursor to row 0 col 32
+	mov	r1, #32
+	bl	set_cursor
 	
-	ldr	r0, =String
-	mov	r1, #5
-	mov	r2, #0
-	ldr	r3, =0x0000FFFF
-	bl	draw_textline
+	ldr	r0, =Line1		// Print ascii line 1
+	add	r0, #32			// (Skip unprintable characters)
+	ldr	r1, =0x000006FF	
+	bl	print
+	bl	newline
 	
-	// Print the return value as a number
-	mov	r0, r1
-	mov	r1, #200
-	mov	r2, #300
-	ldr	r3, =0x0000FFFF
-	bl	draw_num_hex_32
+	ldr	r0, =Line2		// Print ascii line 2
+	ldr	r1, =0x000006FF
+	bl	print
+	bl	newline
 
-	ldr	r0, =String2
-	mov	r1, #11
-	mov	r2, #0
-	ldr	r3, =0x0000FFFF
-	bl	draw_textline
+	ldr	r0, =Line3		// Print ascii line 3
+	ldr	r1, =0x0FF0FFFF
+	bl	print
+	bl	newline
 
-	// Print the return value as a number
-	mov	r0, r0
-	mov	r1, #200
-	mov	r2, #340
-	ldr	r3, =0x0000FFFF
+	ldr	r0, =Line4		// Print ascii line 4
+	ldr	r1, =0xFFFF0000
+	bl	print
+	bl	newline
+	bl	newline
+			
+	ldr	r0, =String		// Print string 1
+	ldr	r1, =0x0000FFFF
+	bl	print
+
+	ldr	r0, =String2		// Print string 2
+	ldr	r1, =0x0000FFFF
+	bl	print
+
+
+	mov	r4, r1			// Print row after string 2
+	mov	r1, #360
+	mov	r2, #180
+	ldr	r3, =0xF0000000
+	bl	draw_num_hex_32	
+
+	mov	r0, r4			// Print col after string 2
+	mov	r1, #432
+	mov	r2, #180
+	ldr	r3, =0x000FFFFF
 	bl	draw_num_hex_32
 
 	
-	ldr	r0, =String3
-	mov	r1, #13
-	mov	r2, #0
-	ldr	r3, =0x0000FFFF
-	bl	draw_textline
+	ldr	r0, =String3		// Print string 3
+	ldr	r1, =0x0000FFFF
+	bl	print
 
-	ldr	r0, =String4
-	mov	r1, #15
-	mov	r2, #0
-	ldr	r3, =0x4208F800
-	bl	draw_textline
-
-	// Print the return value as a number
-	mov	r0, r1
+	mov	r4, r1			// Print row after string 3
 	mov	r1, #200
-	mov	r2, #320
-	ldr	r3, =0x0000FFFF
+	mov	r2, #212
+	ldr	r3, =0xF0000000
 	bl	draw_num_hex_32
 
+	mov	r0, r4			// Print col after string 3
+	mov	r1, #272
+	mov	r2, #212
+	ldr	r3, =0x000FFFFF
+	bl	draw_num_hex_32
+	
+	
+	bl	newline
+	bl	newline
+	
+	ldr	r0, =String4		// Print string 4
+	ldr	r1, =0x4208F800
+	bl	print
+
+	ldr	r0, =String5
+	ldr	r1, =0x000007E0
+	bl	print
+
+	ldr	r0, =String6
+	ldr	r1, =0x0000FFC0
+	bl	print
 	
 s_plain_loop$:
 	b	s_plain_loop$
