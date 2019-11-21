@@ -24,7 +24,7 @@ String:
 	.asciz "Hello world, this is a program (by Evan Rysdam). minimum. joke. kaj. Also, now I've implemented smart line-wrapping, so I don't have to constantly split the strings I want to split into lots of pieces. It just handles it automatically. I can even put in newline characters myself,\nlike this."
 	
 String2:
-	.asciz "\"Shh,\" he said. \"It goes without saying!\"."
+	.asciz "\"Shh,\" he said. \"It goes without saying!\".\n"
 
 String3:
 	.asciz "\"Ain't\" isn't a word."
@@ -39,7 +39,7 @@ String4:
 
 _start:
 	ldr	sp, =0x18000		// STACK BASE
-
+	
 	// Fill "String" with every extended-ascii char code
 	
 	mov	r0, #32			// r0 . offset (skip unprintables)
@@ -47,7 +47,7 @@ _start:
 	ldr	r2, =Line1
 s_fill_loop$:	
 	strb	r1, [r2, r0]
-
+	
 	and	r3, r1, #0b111111
 	cmp	r3,     #0b111111
 	addeq	r0, #1
@@ -66,7 +66,7 @@ s_fill_loop$:
 	mov	r2, #32	
 	ldr	r3, =0x000006FF	
 	bl	draw_textline
-
+	
 	ldr	r0, =Line2
 	mov	r1, #1
 	mov	r2, #0
@@ -84,12 +84,19 @@ s_fill_loop$:
 	mov	r2, #0
 	ldr	r3, =0xFFFF0000
 	bl	draw_textline
-
+	
 	ldr	r0, =String
 	mov	r1, #5
 	mov	r2, #0
 	ldr	r3, =0x0000FFFF
 	bl	draw_textline
+	
+	// Print the return value as a number
+	mov	r0, r1
+	mov	r1, #200
+	mov	r2, #300
+	ldr	r3, =0x0000FFFF
+	bl	draw_num_hex_32
 
 	ldr	r0, =String2
 	mov	r1, #11
@@ -97,6 +104,14 @@ s_fill_loop$:
 	ldr	r3, =0x0000FFFF
 	bl	draw_textline
 
+	// Print the return value as a number
+	mov	r0, r0
+	mov	r1, #200
+	mov	r2, #340
+	ldr	r3, =0x0000FFFF
+	bl	draw_num_hex_32
+
+	
 	ldr	r0, =String3
 	mov	r1, #13
 	mov	r2, #0
@@ -108,6 +123,14 @@ s_fill_loop$:
 	mov	r2, #0
 	ldr	r3, =0x4208F800
 	bl	draw_textline
+
+	// Print the return value as a number
+	mov	r0, r1
+	mov	r1, #200
+	mov	r2, #320
+	ldr	r3, =0x0000FFFF
+	bl	draw_num_hex_32
+
 	
 s_plain_loop$:
 	b	s_plain_loop$

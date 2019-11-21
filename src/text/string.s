@@ -151,7 +151,10 @@ dnh_digit_loop$:
 	
 	and	r0, r4, r9		// r0 = next digit in-place
 	lsr	r0, r8			// r0 = next digit value
-	add	r0, #2			// r0 . next digit char code
+
+	cmp	r0, #9			// r0 . next digit ascii code
+	addle	r0, #48			// (if numeric, add '0' = 48)
+	addhi	r0, #55			// (else, add 'A' - 10 = 55)
 	
 	mov	r1, r5
 	mov	r2, r6

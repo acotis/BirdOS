@@ -66,58 +66,68 @@ draw_textline_nowrap:
 //	r1 . row to start on
 //	r2 . column to start on
 //	r3 . bg color (top 16 bits) and fg color (bottom 16 bits)
+//
+// Return the row and column directly after that of the last character,
+// wrapping to a new line if necessary.
+//	
+//	r0 < row of next character slot
+//	r1 < column of next character slot
 	
 draw_textline:
-	push	{r4, r5, r6, r7, r8, r9, r10, lr}
+	push	{r4, r5, r6, r7, r8, lr}
 
-	mov	r4, r0			// r4 . location of string
-	mov	r5, r1			// r5 . row
-	mov	r6, r2			// r6 . column
-	mov	r7, r3			// r7 . color
-	
 	// Copy one line of text to the line buffer
 
-	mov	r10, #0			// r10 . found null char yet?
+	mov	r4, r0			// r4 . location of string to draw
+	mov	r6, #0			// r6 . found null char yet?
 	
 dt_buffer_loop$:
-	ldr	r8, =LineBuffer		// r8 . address of line buffer
+	ldr	r5, =LineBuffer		// r5 . address of line buffer
 
-	ldr	r9, =LineWidth		// r9 . number of characters to copy
-	ldr	r9, [r9]
-	sub	r9, r6
+	ldr	r7, =LineWidth		// r7 . number of characters to copy
+	ldr	r7, [r7]
+	sub	r7, r2
+
+	mov	r8, r2			// r8 . copy of current column
 	
 dt_charcopy_loop$:
 	ldrb	r0, [r4], #1		// r0 = next char to copy
-	strb	r0, [r8]
+	strb	r0, [r5]
 	
 	cmp	r0, #0			// If null char, set flag and flush
-	moveq	r10, #1
+	moveq	r6, #1
 	beq	dt_flush_buffer$
 
-	cmp	r0, #10			// If newline character, put a null
+	cmp	r0, #10			// If newline character, write a null
 	moveq	r0, #0			// character and flush
-	strb	r0, [r8]
+	strb	r0, [r5]
 	beq	dt_flush_buffer$		
 	
-	subs	r9, #1			// If end of line, flush
+	subs	r7, #1			// If the buffer is full, flush
 	beq	dt_flush_buffer$
 
-	add	r8, #1			// Else, march forward in buffer and
+	add	r5, #1			// Else, march forward in buffer,
+	add	r8, #1			// increment the column copy, and
 	b	dt_charcopy_loop$	// loop back to charcopy 
 	
-dt_flush_buffer$:	
+dt_flush_buffer$:
+	push	{r1, r2, r3}
 	ldr	r0, =LineBuffer		// Draw the line buffer to the screen
-	mov	r1, r5
-	mov	r2, r6
-	mov	r3, r7
 	bl	draw_textline_nowrap
+	pop	{r1, r2, r3}
+	
+	cmp	r6, #0			// If r10 (found null char) not set,
+	addeq	r1, #1			// increment row, go to first col,
+	moveq	r2, #0			// and loop back around.
+	beq	dt_buffer_loop$
 
-	add	r5, #1			// Go to the next line
-	mov	r6, #0			// Go to the first column
+	// Otherwise, don't modify the row and column. They represent the
+	// screen coordinates where the null character would have been
+	// printed, which is exactly the next available character slot
+	// *including wrapping to the next line if necessary* (I'm a genius,
+	// aren't I?)
 
-	cmp	r10, #0			// If r10 (found null char) not set,
-	beq	dt_buffer_loop$		// loop back again
+	mov	r0, r1			// Return row and column
+	mov	r1, r8			// (Use column tracker from before)
 
-	// Done
-
-	pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+	pop	{r4, r5, r6, r7, r8, pc}
