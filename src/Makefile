@@ -9,8 +9,10 @@ main: $(DEPS)
 	arm-none-eabi-ld -o main $(DEPS)
 
 run: main
-	qemu-system-arm -machine raspi2 -kernel main
+	qemu-system-arm -machine raspi2 -kernel main 
 
+runa: main
+	qemu-system-arm -machine integratorcp -kernel main
 
 clean:
 	rm -f main

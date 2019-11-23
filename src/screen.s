@@ -23,8 +23,7 @@ FrameBufferInfo:
 	.int 0		// Y offset
 	.int 0		// Pointer to frame (filled in by GPU)
 	.int 0		// Size of frame (filled in by GPU)
-
-
+	
 // Code
 	
 	.section .text
@@ -84,6 +83,11 @@ mr_mailbox_loop$:
 // a pointer to it
 
 GetFrameBufferPointerReal:
+	ldr	r0, =FrameBufferInfo
+	ldr	r0, [r0, #0x20]
+	cmp	r0, #0
+	movne	pc, lr
+	
 	push	{lr}
 	mov	r0, #1
 	ldr	r1, =FrameBufferInfo

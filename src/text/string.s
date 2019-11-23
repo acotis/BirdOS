@@ -2,7 +2,10 @@
 // Imports
 
 	.globl	GetFrameBufferPointerQEMU
-	.globl	GetScreenByteWidthQEMU
+	.globl	GetFrameBufferPointerQEMU
+	
+	.globl	GetFrameBufferPointerReal
+	.globl	GetScreenByteWidthReal
 	
 	.globl	CharacterMaps
 	.globl	CharacterHeight
