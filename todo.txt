@@ -1,1 +1,3 @@
 
++ Make minimum-working example to show that program is being run on 4 cores.
++ Post to QEMU message board to ask for help.

@@ -8,6 +8,11 @@
 	.globl	print
 
 	.globl	int_to_str
+
+	.globl	GetFrameBufferPointerQEMU
+	.globl	GetFrameBufferPointerReal
+
+	.globl	Cursor // DEBUG ONLY
 	
 // Exports
 
@@ -18,57 +23,65 @@
 	.section .data
 	.align 2
 	
-String:
+Number:
 	.zero 	9
 
+Counter:
+	.int	0
+	
 What:
 	.asciz "Hello"
 	
 // Code
 
 	.section .text
-	.align 2
+	.align 4
 
 _start:
 	ldr	sp, =0x18000		// STACK BASE
 
-	mov	r6, #1
-	
-memwatch_loop$:
-	mov	r0, #0
-	mov	r1, #0
-	bl	set_cursor
-	
-	ldr	r4, =0x00006000
-	mov	r5, #020
+	// Insane workaround to having my code being put on 4 different
+	// CPU's by QEMU??????
 
-	//str	r6, [r4]
-	//add	r6, #1
-	
-memdraw_loop:
-	ldr	r0, =String
-	mov	r1, r4
+	ldr	r0, =Counter
+	ldr	r1, [r0]
+	add	r2, r1, #1
+	str	r2, [r0]
+
+	//cmp	r1, #0
+	//bne	halt
+
+	ldr	r0, =Number
 	bl	int_to_str
-
-	ldr	r0, =String
-	ldr	r1, =0x0000FFFF
+	
+	ldr	r0, =Number
+	ldr	r1, =0x0000F0F0
 	bl	print
-
-	ldr	r0, =String
-	ldr	r1, [r4]
-	bl	int_to_str
-
-	ldr	r0, =String
-	ldr	r1, =0x000007FF
-	bl	print
-
 	bl	newline
+	b	halt
 
-	add	r4, #4
-	subs	r5, #1
-	bne	memdraw_loop
+	
+	ldr	r1, =Cursor
+	ldr	r2, [r1, #4]
+	ldr	r1, [r1]
 
-	b	memwatch_loop$
+	ldr	r3, =0x0000F0F0
+	
+	bl	draw_textline
+
+	//b	halt
+	
+	ldr	r2, =Cursor		// Store new cursor position
+	mov	r0, #20
+	mov	r1, #20
+	str	r0, [r2]
+	str	r1, [r2, #4]
+
+	
+
+	b	halt
+		
 	
 halt:	
 	b	halt
+

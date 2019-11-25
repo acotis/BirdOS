@@ -9,6 +9,8 @@
 	.globl	newline
 	.globl	print
 
+	.globl	Cursor // DEBUG ONLY
+	
 // Data
 
 	.section .data

@@ -1,11 +1,8 @@
 
 // Imports
 
-	.globl	GetFrameBufferPointerQEMU
-	.globl	GetFrameBufferPointerQEMU
-	
-	.globl	GetFrameBufferPointerReal
-	.globl	GetScreenByteWidthReal
+	.globl	GetFrameBufferPointer
+	.globl	GetScreenByteWidth
 	
 	.globl	CharacterMaps
 	.globl	CharacterHeight
@@ -33,10 +30,10 @@ draw_char:
 	push	{r4, r5, r6, r7, lr}
 
 	push	{r0, r1, r2, r3}
-	bl	GetScreenByteWidthQEMU
-	mov	r6, r0			// r6 . Screen byte-width (QEMU)
 	bl	GetFrameBufferPointerQEMU
 	mov	r5, r0			// r5 = Pointer to frame buffer
+	bl	GetScreenByteWidthQEMU
+	mov	r6, r0			// r6 . Screen byte-width (real?)
 	pop	{r0, r1, r2, r3}
 
 	mla	r5, r2, r6, r5		// r5 += offset due to y-pos (r2)

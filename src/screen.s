@@ -1,12 +1,14 @@
 
 // Exports
 	
+	.globl GetFrameBufferPointer
 	.globl GetFrameBufferPointerReal
 	.globl GetFrameBufferPointerQEMU
-
+	
+	.globl GetScreenByteWidth
 	.globl GetScreenByteWidthReal
 	.globl GetScreenByteWidthQEMU
-	
+
 // Data
 	
 	.section .data
@@ -83,14 +85,13 @@ mr_mailbox_loop$:
 // a pointer to it
 
 GetFrameBufferPointerReal:
-	ldr	r0, =FrameBufferInfo
+	ldr	r1, =FrameBufferInfo
 	ldr	r0, [r0, #0x20]
 	cmp	r0, #0
 	movne	pc, lr
 	
 	push	{lr}
 	mov	r0, #1
-	ldr	r1, =FrameBufferInfo
 	add	r1, #0x40000000
 	bl	MailboxWrite
 	
@@ -127,3 +128,13 @@ GetScreenByteWidthReal:
 GetScreenByteWidthQEMU:
 	mov	r0, #1280	// 640 pixels x 2 bytes per pixel
 	mov	pc, lr
+
+
+// Wrapper functions
+
+GetScreenByteWidth:
+	b	GetScreenByteWidthQEMU
+
+GetFrameBufferPointer:
+	b	GetFrameBufferPointerQEMU
+	
