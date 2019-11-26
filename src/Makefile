@@ -1,5 +1,5 @@
 
-DEPS = main.o screen.o text/char_maps.o text/string.o text/text.o text/cursor.o text/text_test.o text/convert.o
+DEPS = main.o screen.o text/char_maps.o text/string.o text/text.o text/cursor.o text/text_test.o text/convert.o games/mandelbrot.o
 
 QSA = /home/evan/Applications/QEMU/qemu-4.1.0/build/arm-softmmu/qemu-system-arm
 
