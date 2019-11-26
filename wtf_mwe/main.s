@@ -17,6 +17,16 @@ Counter:
 	.align	2
 
 _start:
+	// This magical code makes it so that only core 0 (primary core)
+	// actually continues
+	
+	mrc	p15, 0, r0, c0, c0, 5	// Weird instruction to get core ID
+	ands	r0, #0b11
+	bne	halt
+
+
+	// ...and here's the actual program itself
+
 	address	.req r0
 	counter	.req r1
 	color 	.req r2
@@ -30,7 +40,7 @@ _start:
 	ldr	address, =Counter
 	ldr	counter, [address]
 	add	counter, #1
-	//str	counter, [address]
+	str	counter, [address]
 
 	// Use the counter to determine the starting offset from the top
 	// of the screen

@@ -1,13 +1,15 @@
 
 // Exports
+
+	.globl	GPUInit
 	
-	.globl GetFrameBufferPointer
-	.globl GetFrameBufferPointerReal
-	.globl GetFrameBufferPointerQEMU
+	.globl	GetFrameBufferPointer
+	.globl	GetFrameBufferPointerReal
+	.globl	GetFrameBufferPointerQEMU
 	
-	.globl GetScreenByteWidth
-	.globl GetScreenByteWidthReal
-	.globl GetScreenByteWidthQEMU
+	.globl	GetScreenByteWidth
+	.globl	GetScreenByteWidthReal
+	.globl	GetScreenByteWidthQEMU
 
 // Data
 	
@@ -30,6 +32,7 @@ FrameBufferInfo:
 	
 	.section .text
 	.align 2
+
 	
 // MailboxWrite: Write a message to a given mailbox
 //
@@ -81,37 +84,30 @@ mr_mailbox_loop$:
 	mov	pc, lr
 
 
-// GetFrameBufferPointerReal: Set up a frame buffer the real way and return
-// a pointer to it
-
-GetFrameBufferPointerReal:
-	ldr	r1, =FrameBufferInfo
-	ldr	r0, [r0, #0x20]
-	cmp	r0, #0
-	movne	pc, lr
+// GPUInit: Set up a frame buffer the real way. Return whatever message the
+// GPU sends back.
 	
+GPUInit:	
 	push	{lr}
 	mov	r0, #1
+	ldr	r1, =FrameBufferInfo
 	add	r1, #0x40000000
 	bl	MailboxWrite
 	
 	mov	r0, #1
 	bl	MailboxRead
 
-	// TODO: Check if this is actually zero or not
-
-	ldr	r0, =FrameBufferInfo
-	ldr	r0, [r0, #0x20]
 	pop	{pc}
 
-
-// GetFrameBufferPointerQEMU: Just return the pointer to the default frame
-// buffer that QEMU provides
-
-GetFrameBufferPointerQEMU:
-	ldr	r0, =0x3C100000	// Determined manually and might be broken
+	
+// GetFrameBufferPointerReal: return the pointer to the frame buffer that the
+// GPU approved of.
+	
+GetFrameBufferPointerReal:
+	ldr	r0, =FrameBufferInfo
+	ldr	r0, [r0, #0x20]
 	mov	pc, lr
-
+	
 	
 // GetScreenByteWidthReal: return the size of the virtual buffer that the GPU
 // approved of.
@@ -122,6 +118,14 @@ GetScreenByteWidthReal:
 	mov	pc, lr
 
 
+// GetFrameBufferPointerQEMU: Just return the pointer to the default frame
+// buffer that QEMU provides
+
+GetFrameBufferPointerQEMU:
+	ldr	r0, =0x3C100000	// Determined manually and might be broken
+	mov	pc, lr
+
+	
 // GetScreenByteWidthQEMU: just return the size of the virtual buffer that
 // QEMU appears to provide
 

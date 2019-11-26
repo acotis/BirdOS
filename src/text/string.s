@@ -30,9 +30,9 @@ draw_char:
 	push	{r4, r5, r6, r7, lr}
 
 	push	{r0, r1, r2, r3}
-	bl	GetFrameBufferPointerQEMU
+	bl	GetFrameBufferPointer
 	mov	r5, r0			// r5 = Pointer to frame buffer
-	bl	GetScreenByteWidthQEMU
+	bl	GetScreenByteWidth
 	mov	r6, r0			// r6 . Screen byte-width (real?)
 	pop	{r0, r1, r2, r3}
 
