@@ -159,12 +159,12 @@ m_loop$:
 
 	// floating point testing area
 	
-	mov	r4, #0x1000000
-	mov	r5, #0x1000000
+	ldr	r4, =0x41800000
+	ldr	r5, =0xC4000000
 	
 	vmov	s0, r4
 	vmov	s1, r5
-	fadds	s2, s0, s1
+	fmuls	s2, s0, s1
 
 	// Print out the results
 	
