@@ -154,45 +154,6 @@ ce_loop:
 	vsqrt.f32 s4, s4
 
 	vmov	s5, r2
-
-	// print r0, s2, s3, s4, and s5
-	
-	push	{r0, r1, r2, r3}
-
-	mov	r1, r0			// print r0
-	ldr	r0, =Number
-	bl	int_to_str
-	ldr	r0, =Number
-	ldr	r1, =0x0000F000
-	bl	print
-	bl	newline
-	
-	ldr	r0, =nothing		// print s2
-	vmov	r1, s2
-	ldr	r2, =0x0000FFFF
-	bl	print_float
-	
-	ldr	r0, =nothing		// print s3
-	vmov	r1, s3
-	ldr	r2, =0x0000FFC0
-	bl	print_float
-
-	ldr	r0, =nothing		// print s4
-	vmov	r1, s4
-	ldr	r2, =0x000007E0
-	bl	print_float
-
-	ldr	r0, =nothing		// print s5
-	vmov	r1, s5
-	ldr	r2, =0x000007EF
-	bl	print_float
-	
-	bl	newline
-	
-	pop	{r0, r1, r2, r3}
-
-	// continue with program
-	
 	vcmp.f32 s4, s5			// if s4 > 2, break out
 	vmrs	APSR_nzcv, FPSCR	// copy fp compare flags to regular
 	bhi	ce_loop_end		//     compare flags
@@ -204,79 +165,78 @@ ce_loop:
 
 ce_loop_end:	
 	pop	{pc}
+
+
+// fmul: s0 *= r0. trashes s1.
+
+fmul:
+	push	{lr}
+
+	tst	r0, #0x80000000
+	beq	fmul_positive
+	rsb	r0, r0, #0
+	vneg.f32 s0, s0
+
+fmul_positive:	
+	vmov	s1, s0			// s1 . number to add multiples of
+	mov	r1, #0			// s0 . accumulator
+	vmov	s0, r1
+
+f_loop:
+	cmp	r0, #0			// if done, return
+	popeq	{pc}
+	
+	vadd.f32 s0, s1			// add another multiple, loop back
+	sub	r0, #1
+	b	f_loop
+
 	
 	
 // Mandelbrot: draw a Mandelbrot fractal on the screen.
 
 Mandelbrot:
 	push	{r4, r5, r6, lr}
-
+	
 	bl	enable_vfp
-	
-	mov	r4, #100
-	mov	r5, #94
-	
-m_loop$:
-	mov	r0, r5
-	bl	make_color
-	mov	r2, r0
 
+	// put 1/128 into s6
+
+	ldr	r0, =0x3c000000 
+	vmov	s6, r0
+
+	
+	// Loop over each pixel on the screen
+	
+	ldr	r4, =-239		// r4 . row
+m_rowloop:
+	ldr	r5, =-319		// r5 . column
+
+m_colloop:	
+	vmov	s0, s6
+	mov	r0, r4
+	bl	fmul
+
+	vmov	s2, s0
+	vmov	s0, s6
+	mov	r0, r5
+	bl	fmul
+
+	vmov	s1, s2
+	
+	bl	compute_escape		// compute the escape number
+	bl	make_color		// make the appropriate color
+	mov	r2, r0
 	mov	r0, r4
 	mov	r1, r5
 	bl	put_color
 
-	subs	r5, #1
-	bne	m_loop$
+	add	r5, #1
+	cmp	r5, #320
+	ble	m_colloop
 
-
-	// test compute_escape
-
-	ldr	r0, =0x00000000
-	ldr	r1, =0x00000000
-
-	vmov	s0, r0
-	vmov	s1, r1
-
-	bl	compute_escape
-
-	mov	r1, r0
-	ldr	r0, =Number
-	bl	int_to_str
-
-	ldr	r0, =Number
-	ldr	r1, =0x00000F0F
-	bl	print
-	bl	newline
-
-	pop	{r4, r5, r6, pc}
-
-
-	
-	// floating point testing area (obsolete, hopefully?)
-	
-	ldr	r4, =0x41800000
-	ldr	r5, =0xC4000000
-	
-	vmov	s0, r4
-	vmov	s1, r5
-	fsqrts	s2, s0
-
-	// Print out the results
-	
-	ldr	r0, =s0
-	vmov	r1, s0
-	ldr	r2, =0x0000FFFF
-	bl	print_float
-
-	ldr	r0, =s1
-	vmov	r1, s1
-	ldr	r2, =0x0000FFFF
-	bl	print_float
-
-	ldr	r0, =s2
-	vmov	r1, s2
-	ldr	r2, =0x0000FFFF
-	bl	print_float
+	add	r4, #1
+	cmp	r4, #240
+	ble	m_rowloop
 	
 	pop	{r4, r5, r6, pc}
 
@@ -349,3 +309,6 @@ pf_end:
 	
 	pop	{r4, r5, pc}
 
+
+halt:
+	b	halt
