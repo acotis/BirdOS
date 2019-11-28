@@ -5,11 +5,11 @@ QSA = /home/evan/Applications/QEMU/qemu-4.1.0/build/arm-softmmu/qemu-system-arm
 
 #QSA = qemu-system-arm
 
-OPT = -kernel main -smp cores=4,threads=1
+OPT = -kernel main
 
 
 %.o: %.s
-	arm-none-eabi-as -o $@ $<
+	arm-none-eabi-as -o $@ $< -mfpu=vfpv4 -mcpu=cortex-a72 -mfloat-abi=hard
 
 main: $(DEPS)
 	arm-none-eabi-ld -o main $(DEPS)

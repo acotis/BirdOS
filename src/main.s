@@ -31,7 +31,7 @@ Counter:
 	.int	0
 	
 What:
-	.asciz "Hello"
+	.asciz "mandelbrot function returned"
 	
 // Code
 
@@ -48,8 +48,14 @@ _start:
 	bne	halt
 		
 	// Actual code
-
+	
 	bl	Mandelbrot
+
+	// Make sure we returned from that method eventually
+
+	ldr	r0, =What
+	ldr	r1, =0xFFFF0000
+	bl	print
 	
 halt:	
 	b	halt
