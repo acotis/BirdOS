@@ -7,7 +7,8 @@
 	.globl	print		// for testing
 	.globl	newline
 	.globl	int_to_str
-
+	.globl	int_to_str_cbase
+	
 // Exports
 
 	.globl	Mandelbrot
@@ -16,16 +17,25 @@
 
 	.section .data
 	.align	2
+
+s0:
+	.asciz	"s0 = "
+s1:
+	.asciz	"s1 = "
+s2:
+	.asciz	"s2 = "
+
+space:
+	.asciz	" "
 	
 Number:
-	.zero 9
+	.zero	35
 
 	
 // Code
 
 	.section .text
 	.align 	2
-
 
 // enable_vfp: run some weird code that apparently enables that ARM floating
 // point unit.	Copied from pg 2-3 of https://static.docs.arm.com/ddi0463/f/DDI0463F_cortex_a7_fpu_r0p5_trm.pdf.
@@ -147,20 +157,100 @@ m_loop$:
 	subs	r5, #1
 	bne	m_loop$
 
-
-	mov	r1, #0x1000000
-	//lsl	r1, #23
-	vmov	s0, r1
-	vmov	s1, r1
+	// floating point testing area
+	
+	mov	r4, #0x1000000
+	mov	r5, #0x1000000
+	
+	vmov	s0, r4
+	vmov	s1, r5
 	fadds	s2, s0, s1
+
+	// Print out the results
+	
+	ldr	r0, =s0
+	vmov	r1, s0
+	ldr	r2, =0x0000FFFF
+	bl	print_float
+
+	ldr	r0, =s1
+	vmov	r1, s1
+	ldr	r2, =0x0000FFFF
+	bl	print_float
+
+	ldr	r0, =s2
 	vmov	r1, s2
+	ldr	r2, =0x0000FFFF
+	bl	print_float
+	
+	pop	{r4, r5, r6, pc}
+
+
+// helper function for debugging
+//
+//	r0 . string to print before number
+//	r1 . number to print
+//	r2 . colors to use
+	
+print_float:
+	push	{r4, r5, lr}
+
+	number .req r4
+	colors .req r5
+	
+	mov	number, r1
+	mov	colors, r2
+
+	// print before-string
+	
+	mov	r1, colors
+	bl	print
+
+	// convert to binary string
+	
+	ldr	r0, =Number
+	mov	r1, number
+	mov	r2, #1
+	bl	int_to_str_cbase
+
+	//b	pf_end
+	
+	// move mantissa bits over by 2
 
 	ldr	r0, =Number
-	bl	int_to_str
+	mov	r1, #31
+pf_mantissa_loop:
+	ldrb	r2, [r0, r1]
+	add	r1, #2
+	strb	r2, [r0, r1]
+	sub	r1, #3
 
+	cmp	r1, #8
+	bhi	pf_mantissa_loop
+
+	// move exponent bits over by 1
+
+pf_exponent_loop:	
+	ldrb	r2, [r0, r1]
+	add	r1, #1
+	strb	r2, [r0, r1]
+	sub	r1, #2
+
+	cmp	r1, #0
+	bhi	pf_exponent_loop
+
+	// put spaces in their places
+
+	mov	r1, #32 		// ascii value of ' '
+	strb	r1, [r0, #1]
+	strb	r1, [r0, #10]
+
+
+pf_end:
 	ldr	r0, =Number
-	ldr	r1, =0x0F0F
+	mov	r1, colors
 	bl	print
 	bl	newline
 	
-	pop	{r4, r5, r6, pc}
+	pop	{r4, r5, pc}
+

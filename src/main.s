@@ -46,9 +46,6 @@ _start:
 	mrc	p15, 0, r0, c0, c0, 5	// Weird instruction to get core ID
 	ands	r0, #0b11
 	bne	halt
-
-	bl	text_test
-	b	halt
 	
 	// Actual code
 	
