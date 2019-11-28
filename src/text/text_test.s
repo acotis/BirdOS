@@ -6,6 +6,7 @@
 	.globl	print
 
 	.globl	int_to_str
+	.globl	int_to_str_cbase
 	
 // Exports
 	
@@ -47,7 +48,7 @@ String6:
 	.asciz "<-- left arrow"
 
 IntString:
-	.zero 9
+	.zero 33
 	
 // Code
 
@@ -188,4 +189,56 @@ s_fill_loop$:
 	ldr	r1, =0x0000FFC0
 	bl	print
 
+	bl	newline
+	bl	newline
+	
+	// number test
+
+	ldr	r4, =0b10100000100010100010100010101100
+
+	ldr	r0, =IntString		// binary
+	mov	r1, r4
+	mov	r2, #1
+	bl	int_to_str_cbase
+	ldr	r0, =IntString
+	ldr	r1, =0x000007FF
+	bl	print
+	bl	newline
+	
+	ldr	r0, =IntString		// "quartary"
+	mov	r1, r4
+	mov	r2, #2
+	bl	int_to_str_cbase
+	ldr	r0, =IntString
+	ldr	r1, =0x000005FF
+	bl	print
+	bl	newline
+
+	ldr	r0, =IntString		// octal
+	mov	r1, r4
+	mov	r2, #3
+	bl	int_to_str_cbase
+	ldr	r0, =IntString
+	ldr	r1, =0x000003FF
+	bl	print
+	bl	newline
+
+	ldr	r0, =IntString		// hexadecimal
+	mov	r1, r4
+	mov	r2, #4
+	bl	int_to_str_cbase
+	ldr	r0, =IntString
+	ldr	r1, =0x00001FF
+	bl	print
+	bl	newline
+
+	ldr	r0, =IntString		// base-32
+	mov	r1, r4
+	mov	r2, #5
+	bl	int_to_str_cbase
+	ldr	r0, =IntString
+	ldr	r1, =0x0000001F
+	bl	print
+	bl	newline
+	
 	pop	{r4, pc}
