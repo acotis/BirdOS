@@ -25,6 +25,9 @@ s1:
 s2:
 	.asciz	"s2 = "
 
+nothing:
+	.asciz	""
+	
 space:
 	.asciz	" "
 	
@@ -118,21 +121,89 @@ make_color:
 	.unreq	red
 
 
-// compute_escape: compute 93 - x, where x is the escape time of the complex
-// number represented by (s0 + s1 * i). may trash any other s registers.
+// compute_escape: compute 93 - x, where x is the escape time of the
+// mandelbrot sequence with c = (s0 + s1 i). if the sequence remains bounded
+// after 93 iterations of the mandelbot map, return 0. registers s2-s5
+// are trashed.
 	
-;; compute_escape:
-;; 	mov	r0, #93
+compute_escape:
+	push	{lr}
 
-;; ce_loop$:	
-;; 	fmuls	s2, s0, s0		// if |z| > 2, it's escaped
-;; 	fmuls	s3, s1, s1
-;; 	fadds	s2, s2, s3
-;; 	fsqrts	s2, s2
+	mov	r0, #93
 
-;; 	mov	r1, #2
-;; 	vmov	s3, r1
+	mov	r1, #0x00000000		// floating-point 0
+	mov	r2, #0x40000000		// floating-point 2
 	
+	vmov	s2, r1			// z = (s2 + s3*i) = 0
+	vmov	s3, r1
+
+ce_loop:
+
+	vmul.f32 s4, s2, s2		// square z
+	vmls.f32 s4, s3, s3
+	vmul.f32 s5, s2, s3
+	vmla.f32 s5, s2, s3
+	vmov	s2, s4
+	vmov	s3, s5
+
+	vadd.f32 s2, s0			// add c
+	vadd.f32 s3, s1
+
+	vmul.f32 s4, s2, s2		// s4 = |z|
+	vmla.f32 s4, s3, s3
+	vsqrt.f32 s4, s4
+
+	vmov	s5, r2
+
+	// print r0, s2, s3, s4, and s5
+	
+	push	{r0, r1, r2, r3}
+
+	mov	r1, r0			// print r0
+	ldr	r0, =Number
+	bl	int_to_str
+	ldr	r0, =Number
+	ldr	r1, =0x0000F000
+	bl	print
+	bl	newline
+	
+	ldr	r0, =nothing		// print s2
+	vmov	r1, s2
+	ldr	r2, =0x0000FFFF
+	bl	print_float
+	
+	ldr	r0, =nothing		// print s3
+	vmov	r1, s3
+	ldr	r2, =0x0000FFC0
+	bl	print_float
+
+	ldr	r0, =nothing		// print s4
+	vmov	r1, s4
+	ldr	r2, =0x000007E0
+	bl	print_float
+
+	ldr	r0, =nothing		// print s5
+	vmov	r1, s5
+	ldr	r2, =0x000007EF
+	bl	print_float
+	
+	bl	newline
+	
+	pop	{r0, r1, r2, r3}
+
+	// continue with program
+	
+	vcmp.f32 s4, s5			// if s4 > 2, break out
+	vmrs	APSR_nzcv, FPSCR	// copy fp compare flags to regular
+	bhi	ce_loop_end		//     compare flags
+
+	subs	r0, #1			// march forward
+	beq	ce_loop_end		// (if on 93rd cycle, break out)
+
+	b	ce_loop
+
+ce_loop_end:	
+	pop	{pc}
 	
 	
 // Mandelbrot: draw a Mandelbrot fractal on the screen.
@@ -157,14 +228,38 @@ m_loop$:
 	subs	r5, #1
 	bne	m_loop$
 
-	// floating point testing area
+
+	// test compute_escape
+
+	ldr	r0, =0x00000000
+	ldr	r1, =0x00000000
+
+	vmov	s0, r0
+	vmov	s1, r1
+
+	bl	compute_escape
+
+	mov	r1, r0
+	ldr	r0, =Number
+	bl	int_to_str
+
+	ldr	r0, =Number
+	ldr	r1, =0x00000F0F
+	bl	print
+	bl	newline
+
+	pop	{r4, r5, r6, pc}
+
+
+	
+	// floating point testing area (obsolete, hopefully?)
 	
 	ldr	r4, =0x41800000
 	ldr	r5, =0xC4000000
 	
 	vmov	s0, r4
 	vmov	s1, r5
-	fmuls	s2, s0, s1
+	fsqrts	s2, s0
 
 	// Print out the results
 	
