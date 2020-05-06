@@ -1,23 +1,23 @@
 
 BirdOS/
-    doc.txt			This file
-    notes.txt			Scratch notes
-    img/			Images related to the project
+    doc.txt             This file
+    notes.txt           Scratch notes
+    img/                Images related to the project
 
-    src/			
-        Makefile		Makefile
-        main.s			Main assembly file
-	screen.s		Getting screen buffer (real + QEMU)
+    src/            
+        Makefile        Makefile
+        main.s          Main assembly file
+        screen.s        Getting screen buffer (real + QEMU)
 
-	text/		
-	    char_maps.s		Character maps (just data)
-	    string.s		Code for drawing strings anywhere on-screen
-	    text.s		Code for drawing pretty even lines of text
+    text/       
+        char_maps.s     Character maps (just data)
+        string.s        Code for drawing strings anywhere on-screen
+        text.s          Code for drawing pretty even lines of text
 
 
 TEXT
 
-Throughout the text/ source files, it is assumed that character bitmaps have
-a width of 8 bits = 1 byte. The height of the bitmaps, on the other hand, is
-considered to be mutable (by the OS designer) and is specified in char_maps.s
-as CharacterHeight.
+Throughout the text/ source files, it is assumed that character bitmaps
+have a width of 8 bits = 1 byte. The height of the bitmaps, on the other
+hand, is considered to be mutable (by the OS designer) and is specified in
+char_maps.s as CharacterHeight.

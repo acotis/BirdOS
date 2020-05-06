@@ -1,2 +1,13 @@
 
-+ Implement Mandelbrot game
++ Transfer to real Raspberry Pi
+
++ Get keyboard input working
+
++ Write memory manager
+  First idea: Keep a doubly linked list of available memory chunks. To
+  	      allocate memory, scroll through the list until you find a chunk
+	      that's big enough and break off the amount requested. To free
+	      memory, scroll through the list until you find the place it
+	      belongs. If it's adjacent to the chunks on either side of it,
+	      merge them together.
+  	      

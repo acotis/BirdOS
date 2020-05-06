@@ -117,7 +117,6 @@ GetScreenByteWidthReal:
 	ldr	r0, [r0, #0x10]
 	mov	pc, lr
 
-
 // GetFrameBufferPointerQEMU: Just return the pointer to the default frame
 // buffer that QEMU provides
 
