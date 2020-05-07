@@ -1,0 +1,27 @@
+
+This document explains how to prepare an SD card for a baremetal OS for the Raspberry Pi.
+
+First, a preamble. I am writing this document on 7 May 2020. You are reading it on some other date. Your present is my future, and my present is your past. As I write this, I can remember three different workflows I have set up for building a baremetal OS on an RPi, including the one I'm about to describe. This information appears to change over time and what works for me today may not for you when you read this. You have been warned. Also, I should tell you something about what this document will NOT do -- it will NOT explain *why* this process works nor what you would need to do to invent your own process if this one fails you. I'm not going to tell you this information because I don't possess it myself. You have been warned. One last thing: relative to my current state of knowledge, all processes involving assembly code are fragile. Right before setting out to invent the process I'm about to describe, I was having an issue where deleting one line of assembly code that never even got called would cause the entire program to fail to boot when I plugged it in. I don't know what I did to bring about this state of affairs, so I can't tell you what not to do. Backup all files at every convenience. YOU HAVE BEEN WARNED.
+
+Instructions:
+
+    1. Obtain an SD card. I think it has to be at least 4GB in size.
+
+    2. Use GParted to create a partition table of type "msdos".
+
+    3. Create a single partition of type FAT32, as large as will fit on the card.
+
+    4. Visit this github repostitory: https://github.com/raspberrypi/firmware
+
+    5. From the boot/ folder, copy all of the following onto your newly-formatted SD card:
+ 
+        a. All files with names matching "start*.elf". I think there will be 8 of them.
+
+        b. All files with names matching "fixup*.dat". I think there will be 8 of them.
+
+        c. The file called "bootcode.bin".
+
+    6. Whatever process you're using to build your OS should output a file called
+       "kernel.img". Put that file alongside the others on the SD card. 
+
+    7. Plug your SD card into the RPi. Plug in the power. Your OS should boot.

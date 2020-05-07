@@ -15,10 +15,8 @@
 FrameBufferInfo:
     .word 1024      // Physical width
     .word 768       // Physical height
-    //.word 1024      // Virtual width
-    //.word 768       // Virtual height
-    .word 256       // Virtual width (1/4 resolution)
-    .word 192       // Virtual height (1/4 resolution)
+    .word 1024      // Virtual width
+    .word 768       // Virtual height
 
     .word 0         // GPU pitch (filled in by GPU)
     .word 16        // Bit depth (high color)

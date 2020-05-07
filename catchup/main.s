@@ -8,7 +8,6 @@
     .globl  GPUInit
     .globl  GetScreenByteWidth
     .globl  GetFrameBufferPointer
-    .globl  draw_char
 
 // Data
 
@@ -22,40 +21,9 @@ String:
 _start:
 	ldr     sp, =0x18000		// STACK BASE
 
-	// Check what core I am on, continue only if I'm on core 0 (primary)
-
-	//mrc	    p15, 0, r0, c0, c0, 5	// Weird instruction to get core ID
-	//ands	r0, #0b11
-	//bne	    halt
-
-    //ldr     r0, =0b01101010001010001010001000001010
-    //bl      broadcast
-
     bl      GPUInit
-    //bl      GetScreenByteWidth
-    //ldr     r0, =FrameBufferInfo
-    //ldr     r0, [r0, #32]
-    //bl      broadcast
-
-    //mov     r0, #97
-    //mov     r1, #1000
-    //mov     r2, #1000
-    //ldr     r3, =0x0000FFFF
-    //bl      draw_char
-    
-    //ldr     r0, =0b01101010001010001010001000001010
-    //bl      broadcast
-
 
     // Fill part of the screen with white
-
-    red     .req r8
-    green   .req r9
-    blue    .req r10
-
-    mov     blue,  #0b1
-    mov     green, #0b100000
-    mov     blue,  #0b100000000000
 
     pointer .req r4
     counter .req r6

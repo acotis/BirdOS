@@ -1,0 +1,19 @@
+[
+ {
+  "bootable" : true,
+  "description" : "LibreELEC is a fast and user-friendly Kodi Entertainment Center distribution.",
+  "folder" : "/mnt/os/LibreELEC_RPi",
+  "icon" : "/mnt/os/LibreELEC_RPi/LibreELEC_RPi.png",
+  "name" : "LibreELEC_RPi",
+  "partitions" : [
+"/dev/mmcblk0p6",
+"/dev/mmcblk0p7"
+  ],
+  "release_date" : "2019-09-03",
+  "supported_models" : [
+"Pi Model",
+"Pi Compute Module",
+"Pi Zero"
+  ]
+ }
+]

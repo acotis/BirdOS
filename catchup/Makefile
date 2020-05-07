@@ -10,7 +10,7 @@ main: $(DEPS)
 
 flash: main
 	sudo mkdir -p /media/evan/whatever
-	sudo mount /dev/sdb6 /media/evan/whatever
+	sudo mount /dev/sdb1 /media/evan/whatever
 	sudo cp main /media/evan/whatever/kernel.img
 	sudo umount /media/evan/whatever
 	sudo rmdir /media/evan/whatever
