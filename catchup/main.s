@@ -20,6 +20,14 @@ String:
     .section .init
 
 _start:
+	ldr     sp, =0x18000		// STACK BASE
+
+	// Check what core I am on, continue only if I'm on core 0 (primary)
+
+	//mrc	    p15, 0, r0, c0, c0, 5	// Weird instruction to get core ID
+	//ands	r0, #0b11
+	//bne	    halt
+
     //ldr     r0, =0b01101010001010001010001000001010
     //bl      broadcast
 
@@ -41,6 +49,14 @@ _start:
 
     // Fill part of the screen with white
 
+    red     .req r8
+    green   .req r9
+    blue    .req r10
+
+    mov     blue,  #0b1
+    mov     green, #0b100000
+    mov     blue,  #0b100000000000
+
     pointer .req r4
     counter .req r6
     color   .req r7
@@ -49,14 +65,12 @@ _start:
 
     add     pointer, r0, #0xDF000   // Skip this many words
     ldr     counter, =0x2000000             
-    ldr     color, =0xFFFFFFFF        
 fill$:
     mov     r5, #0x80000             // Pause for a beat
     bl      countdown$
 
     strh    pointer, [pointer]      // Write a word
     add     pointer, #2             // Increment pointer
-    add     color, #1               // Subtly change color
     subs    counter, #1             // Decrement counter
     bne     fill$
 
@@ -120,3 +134,11 @@ countdown$:
     subs    r5, #1
     moveq   pc, lr
     b       countdown$
+
+
+// Do nothing forever
+
+halt:
+    b       halt
+
+
