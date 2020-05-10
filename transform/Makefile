@@ -1,64 +1,30 @@
-###############################################################################
-#	makefile
-#	 by Alex Chadwick
-#
-#	A makefile script for generation of raspberry pi kernel images.
-###############################################################################
 
-# The toolchain to use. arm-none-eabi works, but there does exist 
-# arm-bcm2708-linux-gnueabi.
-ARMGNU ?= arm-none-eabi
-
-# The directory in which source files are stored.
-SOURCE = source/
-
-# The name of the output file to generate.
-TARGET = kernel.img
-
-# The name of the assembler listing file to generate.
-LIST = kernel.list
-
-# The name of the map file to generate.
-MAP = kernel.map
-
-# The name of the linker script to use.
-LINKER = kernel.ld
-
-# The names of all object files that must be generated. Deduced from the 
-# assembly code files in source.
 OBJECTS := build/main.o build/frameBuffer.o
 
-# Rule to make everything.
-all: $(TARGET) $(LIST)
+all: kernel.img kernel.list
 
-# Rule to remake everything. Does not include clean.
 rebuild: all
 
-# Rule to make the listing file.
-$(LIST) : build/output.elf
-	$(ARMGNU)-objdump -d build/output.elf > $(LIST)
+kernel.list : build/output.elf
+	arm-none-eabi-objdump -d build/output.elf > kernel.list
 
-# Rule to make the image file.
-$(TARGET) : build/output.elf
-	$(ARMGNU)-objcopy build/output.elf -O binary $(TARGET) 
+kernel.img : build/output.elf
+	arm-none-eabi-objcopy build/output.elf -O binary kernel.img 
 
-# Rule to make the elf file.
-build/output.elf : $(OBJECTS) $(LINKER)
-	$(ARMGNU)-ld --no-undefined $(OBJECTS) -Map $(MAP) -o build/output.elf -T $(LINKER)
+build/output.elf : $(OBJECTS) kernel.ld
+	arm-none-eabi-ld --no-undefined $(OBJECTS) -Map kernel.map -o build/output.elf -T kernel.ld
 
-# Rule to make the object files.
-build/%.o: $(SOURCE)%.s build/
-	$(ARMGNU)-as -I $(SOURCE) $< -o $@
+build/%.o: source/%.s build/
+	arm-none-eabi-as -I source/ $< -o $@
 
 build/:
 	mkdir $@
 
-# Rule to clean files.
 clean : 
 	-rm -rf build/
-	-rm -f $(TARGET)
-	-rm -f $(LIST)
-	-rm -f $(MAP)
+	-rm -f kernel.img
+	-rm -f kernel.list
+	-rm -f kernel.map
 
 flash: all
 	sudo mkdir -p /media/evan/whatever
