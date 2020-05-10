@@ -22,9 +22,11 @@
 * FrameBuferDescription FrameBufferInfo =
 *		{ 1024, 768, 1024, 768, 0, 16, 0, 0, 0, 0 };
 */
+
 .section .data
 .align 12
 .globl FrameBufferInfo 
+
 FrameBufferInfo:
 	.int 1024	/* #0 Width */
 	.int 768	/* #4 Height */
@@ -47,11 +49,11 @@ FrameBufferInfo:
 * C++ Signature: FrameBuferDescription* InitialiseFrameBuffer(u32 width,
 *		u32 height, u32 bitDepth)
 */
-.section .text
-.globl InitialiseFrameBuffer
-InitialiseFrameBuffer:
-	result .req r0
 
+.section .text
+.globl GPUInit
+
+GPUInit:
 	push {lr}	
 	ldr r0,=FrameBufferInfo
 
@@ -62,10 +64,15 @@ InitialiseFrameBuffer:
 	mov r0,#1
 	bl MailboxRead
 		
-	teq result,#0
-	movne result,#0
-	popne {pc}
+	teq         r0,#0
+	movne       r0,#0
+    moveq       r0, #1
 
-	ldr result,=FrameBufferInfo
 	pop {pc}
-	.unreq result
+
+.globl GetFrameBufferPointer
+
+GetFrameBufferPointer:
+    ldr     r0, =FrameBufferInfo
+    ldr     r0, [r0, #0x20]
+    mov     pc, lr

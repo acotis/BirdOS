@@ -49,7 +49,7 @@ main:
 	mov r0,#1024
 	mov r1,#768
 	mov r2,#16
-	bl InitialiseFrameBuffer
+	bl GPUInit
 
 /* NEW
 * Check for a failed frame buffer.
@@ -70,20 +70,19 @@ main:
 
 	noError$:
 
-	fbInfoAddr .req r4
-	mov fbInfoAddr,r0
 
 /* NEW
 * Set pixels forevermore. 
 */
 render$:
 	fbAddr .req r3
-	ldr fbAddr,[fbInfoAddr,#32]
+    bl      GetFrameBufferPointer
+    mov     fbAddr, r0
 
 /* NEW
 * We will use r0 to keep track of the current colour.
 */
-	colour .req r0
+	colour .req r4
 	y .req r1
 	mov y,#768
 	drawRow$:
@@ -104,4 +103,3 @@ render$:
 	b render$
 
 	.unreq fbAddr
-	.unreq fbInfoAddr
