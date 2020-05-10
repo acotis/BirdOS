@@ -10,13 +10,28 @@
 // Data
 
     .section .data
-    .align 4
+    .align 12
     
 FrameBufferInfo:
     .word 1024      // Physical width
     .word 768       // Physical height
     .word 1024      // Virtual width
     .word 768       // Virtual height
+
+    .word 0         // GPU pitch (filled in by GPU)
+    .word 16        // Bit depth (high color)
+    .word 0         // X offset
+    .word 0         // Y offset
+    .word 0         // Pointer to frame (filled in by GPU)
+    .word 0         // Size of frame (filled in by GPU)
+
+    .align 4
+
+FrameBufferInfo_2:
+    .word 0         // Physical width
+    .word 0         // Physical height
+    .word 0         // Virtual width
+    .word 0         // Virtual height
 
     .word 0         // GPU pitch (filled in by GPU)
     .word 16        // Bit depth (high color)
@@ -68,17 +83,14 @@ mr_status_loop$:
     tst     r2, #0x40000000     // is zero
     bne     mr_status_loop$
         
-    // Read from the Read field until the mailbox is correct
-    
-mr_mailbox_loop$:   
     ldr     r2, [r1, #0x0]      // r2 . contents of Read field
 
     and     r3, r2, #0b1111     // Make sure bottom 4 bits match r0
-    teq     r3, r0
+    teq     r3, r0              // (If not, loop back around)
     bne     mr_status_loop$
     
     //and     r0, r2, #0xFFFFFFF0
-    mov     r0, r2
+    mov     r0, r2              // Leave the mailbox ID in for now
     mov     pc, lr
 
 
@@ -104,6 +116,7 @@ GPUInit:
 GetFrameBufferPointer:
     ldr     r0, =FrameBufferInfo
     ldr     r0, [r0, #0x20]
+    //bic     r0, #0x40000000     // Apparently we need to clear these bits
     mov     pc, lr
     
     
