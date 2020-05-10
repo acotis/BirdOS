@@ -1,5 +1,5 @@
 
-DEPS := main.o frameBuffer.o
+DEPS := main.o screen.o
 
 %.o: %.s
 	arm-none-eabi-as $< -o $@
