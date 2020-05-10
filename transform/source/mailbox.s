@@ -26,33 +26,17 @@ GetMailboxBase:
 */
 .globl MailboxWrite
 MailboxWrite: 
-	tst r0,#0b1111
-	movne pc,lr
-	cmp r1,#15
-	movhi pc,lr
-
-	channel .req r1
-	value .req r2
-	mov value,r0
-	push {lr}
-	bl GetMailboxBase
-	mailbox .req r0
+    add     r0, r1
+    ldr     r1, =0x2000B880
 		
-	wait1$:
-		status .req r3
-		ldr status,[mailbox,#0x18]
+wait1$:
+    ldr     r2,[r1,#0x18]
 
-		tst status,#0x80000000
-		.unreq status
-		bne wait1$
+    tst     r2,#0x80000000
+    bne     wait1$
 
-	add value,channel
-	.unreq channel
-	
-	str value,[mailbox,#0x20]
-	.unreq value
-	.unreq mailbox
-	pop {pc}
+	str     r0,[r1,#0x20]
+    mov     pc, lr
 
 /* NEW
 * MailboxRead returns the current value in the mailbox addressed to a channel
@@ -61,35 +45,18 @@ MailboxWrite:
 */
 .globl MailboxRead
 MailboxRead: 
-	cmp r0,#15
-	movhi pc,lr
-
-	channel .req r1
-	mov channel,r0
-	push {lr}
-	bl GetMailboxBase
-	mailbox .req r0
+    ldr     r1, =0x2000B880
 	
-	rightmail$:
-		wait2$:
-			status .req r2
-			ldr status,[mailbox,#0x18]
-			
-			tst status,#0x40000000
-			.unreq status
-			bne wait2$
-		
-		mail .req r2
-		ldr mail,[mailbox,#0]
+wait2$:
+    ldr     r2,[r1,#0x18]
+    tst     r2,#0x40000000
+    bne     wait2$
 
-		inchan .req r3
-		and inchan,mail,#0b1111
-		teq inchan,channel
-		.unreq inchan
-		bne rightmail$
-	.unreq mailbox
-	.unreq channel
+    ldr     r2,[r1,#0]
 
-	and r0,mail,#0xfffffff0
-	.unreq mail
-	pop {pc}
+    and     r3,r2,#0b1111
+    teq     r3,r0
+    bne     wait2$
+
+	and     r0,r2,#0xfffffff0
+    mov     pc, lr
