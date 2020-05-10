@@ -1,17 +1,14 @@
 
-OBJECTS := build/main.o build/frameBuffer.o
+DEPS := main.o frameBuffer.o
 
-build/%.o: source/%.s build/
-	arm-none-eabi-as -I source/ $< -o $@
+%.o: %.s
+	arm-none-eabi-as $< -o $@
 
-build/:
-	mkdir $@
 
-kernel.img : build/output.elf
-	arm-none-eabi-objcopy build/output.elf -O binary kernel.img 
-
-build/output.elf : $(OBJECTS) kernel.ld
-	arm-none-eabi-ld --no-undefined $(OBJECTS) -Map kernel.map -o build/output.elf -T kernel.ld
+kernel.img : $(DEPS) kernel.ld
+	arm-none-eabi-ld --no-undefined $(DEPS) -Map kernel.map \
+		-o output.elf -T kernel.ld
+	arm-none-eabi-objcopy output.elf -O binary kernel.img 
 
 
 all: kernel.img
@@ -20,10 +17,10 @@ rebuild: all
 
 
 clean : 
-	-rm -rf build/
+	-rm -f *.o
 	-rm -f kernel.img
-	-rm -f kernel.list
 	-rm -f kernel.map
+	-rm -f output.elf
 
 flash: all
 	sudo mkdir -p /media/evan/whatever
