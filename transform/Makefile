@@ -1,12 +1,11 @@
 
 OBJECTS := build/main.o build/frameBuffer.o
 
-all: kernel.img kernel.list
+build/%.o: source/%.s build/
+	arm-none-eabi-as -I source/ $< -o $@
 
-rebuild: all
-
-kernel.list : build/output.elf
-	arm-none-eabi-objdump -d build/output.elf > kernel.list
+build/:
+	mkdir $@
 
 kernel.img : build/output.elf
 	arm-none-eabi-objcopy build/output.elf -O binary kernel.img 
@@ -14,11 +13,11 @@ kernel.img : build/output.elf
 build/output.elf : $(OBJECTS) kernel.ld
 	arm-none-eabi-ld --no-undefined $(OBJECTS) -Map kernel.map -o build/output.elf -T kernel.ld
 
-build/%.o: source/%.s build/
-	arm-none-eabi-as -I source/ $< -o $@
 
-build/:
-	mkdir $@
+all: kernel.img
+
+rebuild: all
+
 
 clean : 
 	-rm -rf build/
