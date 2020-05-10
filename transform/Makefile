@@ -9,9 +9,6 @@
 # arm-bcm2708-linux-gnueabi.
 ARMGNU ?= arm-none-eabi
 
-# The intermediate directory for compiled object files.
-BUILD = build/
-
 # The directory in which source files are stored.
 SOURCE = source/
 
@@ -29,7 +26,7 @@ LINKER = kernel.ld
 
 # The names of all object files that must be generated. Deduced from the 
 # assembly code files in source.
-OBJECTS := $(patsubst $(SOURCE)%.s,$(BUILD)%.o,$(wildcard $(SOURCE)*.s))
+OBJECTS := build/main.o build/frameBuffer.o
 
 # Rule to make everything.
 all: $(TARGET) $(LIST)
@@ -38,27 +35,35 @@ all: $(TARGET) $(LIST)
 rebuild: all
 
 # Rule to make the listing file.
-$(LIST) : $(BUILD)output.elf
-	$(ARMGNU)-objdump -d $(BUILD)output.elf > $(LIST)
+$(LIST) : build/output.elf
+	$(ARMGNU)-objdump -d build/output.elf > $(LIST)
 
 # Rule to make the image file.
-$(TARGET) : $(BUILD)output.elf
-	$(ARMGNU)-objcopy $(BUILD)output.elf -O binary $(TARGET) 
+$(TARGET) : build/output.elf
+	$(ARMGNU)-objcopy build/output.elf -O binary $(TARGET) 
 
 # Rule to make the elf file.
-$(BUILD)output.elf : $(OBJECTS) $(LINKER)
-	$(ARMGNU)-ld --no-undefined $(OBJECTS) -Map $(MAP) -o $(BUILD)output.elf -T $(LINKER)
+build/output.elf : $(OBJECTS) $(LINKER)
+	$(ARMGNU)-ld --no-undefined $(OBJECTS) -Map $(MAP) -o build/output.elf -T $(LINKER)
 
 # Rule to make the object files.
-$(BUILD)%.o: $(SOURCE)%.s $(BUILD)
+build/%.o: $(SOURCE)%.s build/
 	$(ARMGNU)-as -I $(SOURCE) $< -o $@
 
-$(BUILD):
+build/:
 	mkdir $@
 
 # Rule to clean files.
 clean : 
-	-rm -rf $(BUILD)
+	-rm -rf build/
 	-rm -f $(TARGET)
 	-rm -f $(LIST)
 	-rm -f $(MAP)
+
+flash: all
+	sudo mkdir -p /media/evan/whatever
+	sudo mount /dev/sdb1 /media/evan/whatever
+	sudo cp kernel.img /media/evan/whatever/kernel.img
+	sudo umount /media/evan/whatever
+	sudo rmdir /media/evan/whatever
+
