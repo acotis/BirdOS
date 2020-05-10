@@ -36,7 +36,7 @@ main:
 
     // Fill the first N pixels of the framebuffer with rainbow colors
 
-    ldr     r1, =0x2100000          // Color only this many pixels
+    ldr     r1, =0x21000            // Color only this many pixels
 fill$:
     strh    r0, [r0]                // Write a word
     add     r0, #2                  // Increment pointer

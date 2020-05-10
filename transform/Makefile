@@ -6,9 +6,11 @@ DEPS := main.o screen.o
 
 
 kernel.img : $(DEPS) kernel.ld
-	arm-none-eabi-ld --no-undefined $(DEPS) -Map kernel.map \
-		-o output.elf -T kernel.ld
+	arm-none-eabi-ld $(DEPS) -o output.elf -T kernel.ld
 	arm-none-eabi-objcopy output.elf -O binary kernel.img 
+
+#kernel.img : $(DEPS) kernel.ld
+	#arm-none-eabi-ld $(DEPS) -o kernel.img -T kernel.ld
 
 
 all: kernel.img
@@ -19,7 +21,6 @@ rebuild: all
 clean : 
 	-rm -f *.o
 	-rm -f kernel.img
-	-rm -f kernel.map
 	-rm -f output.elf
 
 flash: all

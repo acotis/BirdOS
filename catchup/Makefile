@@ -6,7 +6,8 @@ DEPS = main.o screen.o
 	arm-none-eabi-as -o $@ $< -mfpu=vfpv4 -mcpu=cortex-a72 -mfloat-abi=hard
 
 main: $(DEPS)
-	arm-none-eabi-ld -o main $(DEPS)
+	arm-none-eabi-ld -o output.elf $(DEPS)
+	arm-none-eabi-objcopy output.elf -O binary main
 
 flash: main
 	sudo mkdir -p /media/evan/whatever
@@ -16,6 +17,6 @@ flash: main
 	sudo rmdir /media/evan/whatever
 
 clean:
+	rm -f output.elf
 	rm -f main
 	rm -f *.o
-	rm -f ./text/*.o
