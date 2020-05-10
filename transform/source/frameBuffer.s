@@ -52,11 +52,9 @@ FrameBufferInfo:
 InitialiseFrameBuffer:
 	result .req r0
 
-	push {r4,lr}	
-	fbInfoAddr .req r4		
-	ldr fbInfoAddr,=FrameBufferInfo
+	push {lr}	
+	ldr r0,=FrameBufferInfo
 
-	mov r0,fbInfoAddr
 	add r0,#0x40000000
 	mov r1,#1
 	bl MailboxWrite
@@ -66,9 +64,8 @@ InitialiseFrameBuffer:
 		
 	teq result,#0
 	movne result,#0
-	popne {r4,pc}
+	popne {pc}
 
-	mov result,fbInfoAddr
-	pop {r4,pc}
+	ldr result,=FrameBufferInfo
+	pop {pc}
 	.unreq result
-	.unreq fbInfoAddr
