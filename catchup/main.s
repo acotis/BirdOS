@@ -6,12 +6,21 @@
 // Imports
 
     .globl  GPUInit
-    .globl  GetScreenByteWidth
     .globl  GetFrameBufferPointer
+    .globl  text_test
+
+// Data
+
+    .section .data
+    .align 4
+
+String:
+    .asciz "Hello world!"
 
 // Code
     
     .section .init
+    .align 4
 
 _start:
     b       main
@@ -22,6 +31,12 @@ _start:
 
 main:
     ldr     sp, =0x18000            // STACK BASE
+
+    bl      GPUInit
+
+    bl      text_test
+    b       halt
+    
 
     // Initialize a frame buffer
 
