@@ -9,3 +9,4 @@
 	      belongs. If it's adjacent to the chunks on either side of it,
 	      merge them together.
   	      
++ Determine the copyright of the bird image.

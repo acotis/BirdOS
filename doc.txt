@@ -1,18 +1,23 @@
 
 BirdOS/
-    doc.txt             This file
-    notes.txt           Scratch notes
-    img/                Images related to the project
-
     src/            
-        Makefile        Makefile
-        main.s          Main assembly file
-        screen.s        Getting screen buffer (real + QEMU)
+        Makefile            Makefile
+        main.s              Main assembly file
+        screen.s            Getting a frame buffer from the GPU
 
-    text/       
-        char_maps.s     Character maps (just data)
-        string.s        Code for drawing strings anywhere on-screen
-        text.s          Code for drawing pretty even lines of text
+        text/       
+            char_maps.s     Character maps (just data)
+            string.s        Code for drawing strings anywhere on-screen
+            text.s          Code for drawing pretty even lines of text
+            cursor.s        Support for the "cursor" abstraction
+            convert.s       Convert a number into a string in various bases
+            text_test.s     Test all of the above features
+
+    files/                  Miscellaneous files
+
+    doc.txt                 This file
+    notes.txt               Scratch notes
+    todo.txt                Todo file
 
 
 TEXT

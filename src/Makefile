@@ -20,3 +20,5 @@ clean:
 	rm -f output.elf
 	rm -f main
 	rm -f *.o
+	rm -f text/*.o
+	rm -f games/*.o
