@@ -10,3 +10,5 @@
 	      merge them together.
   	      
 + Determine the copyright of the bird image.
+
++ Perform comprehensive test of int_to_str

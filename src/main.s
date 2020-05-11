@@ -5,20 +5,31 @@
     
 // Imports
 
-    .globl  GPUInit
-    .globl  GetFrameBufferPointer
-    .globl  text_test
-    .globl  Mandelbrot
+    .globl  GPUInit             // Screen
+
+    .globl  print               // Cursor abstraction
+    .globl  newline
+
+    .globl  int_to_str
+    .globl  int_to_str_cbase    // Currently debugging this
+
+    .globl  fill_in_powers      // DEBUG ONLY!
+    .globl  Powers              // DEBUG ONLY!
+
 
 // Data
 
     .section .data
     .align 4
 
-String:
-    .asciz "Hello world!"
+IntString:
+    .space 33
 
-// Code
+String:
+    .asciz "Hello world..."
+
+
+// Code (init)
     
     .section .init
     .align 4
@@ -27,18 +38,80 @@ _start:
     b       main
 
 
+// Code (main)
+
     .section .text
     .align 2
 
 main:
     ldr     sp, =0x18000            // STACK BASE
 
-    bl      GPUInit
+    bl      GPUInit                 // Init a frame buffer
 
-    //bl      text_test
-    bl      Mandelbrot
+    // Print hello world so we know the screen is working
+
+    ldr     r0, =String
+    ldr     r1, =0x0000FFFF
+    bl      print
+    bl      newline
+    bl      newline
+
+    // Put in a call to int_to_str_cbase
+
+    ldr     r0, =IntString
+    ldr     r1, =0xFFFFFFFF
+    ldr     r2, =2
+    bl      int_to_str_cbase
+
+    // Print the result
+
+    ldr     r0, =IntString
+    ldr     r1, =0x0000FFFF
+    bl      print
+    bl      newline
+
+    b       halt
+   
+
+
+
+    // Put in a call to the method in question
+
+    ldr     r0, =10               // Fill in powers of 10 up to 45
+    ldr     r1, =0xFFFFFFFF
+    bl      fill_in_powers
+
+    // Print the contents of the Powers table in base 16, up to the
+    // first zero
+
+    power_p     .req r4
+    power       .req r5
+    count       .req r6
+
+    ldr     power_p, =Powers        // Point at first entry in Powers
+    mov     count, #32
+m_powers_loop$:
+    ldr     power, [power_p], #4    // Get current entry
+
+    ldr     r0, =IntString          // Convert to a string
+    mov     r1, power
+    bl      int_to_str
+
+    ldr     r0, =IntString          // Now print it
+    ldr     r1, =0x0000FFFF
+    bl      print
+    bl      newline
+
+    subs    count, #1               // Decrement counter
+    bne     m_powers_loop$          // If pos, loop around
+
+m_powers_end$:
     b       halt
     
+
+
+
+
 
     // Initialize a frame buffer
 

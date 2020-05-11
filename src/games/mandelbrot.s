@@ -7,7 +7,7 @@
 	.globl	print		// for testing
 	.globl	newline
 	.globl	int_to_str
-	.globl	int_to_str_cbase
+	.globl	int_to_str_cbase_old
 	
 // Exports
 
@@ -266,7 +266,7 @@ print_float:
 	ldr	r0, =Number
 	mov	r1, number
 	mov	r2, #1
-	bl	int_to_str_cbase
+	bl	int_to_str_cbase_old
 
 	//b	pf_end
 	
