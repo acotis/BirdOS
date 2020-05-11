@@ -11,10 +11,12 @@
     .globl  newline
 
     .globl  int_to_str
-    .globl  int_to_str_cbase    // Currently debugging this
+    .globl  int_to_str_cbase    
 
     .globl  fill_in_powers      // DEBUG ONLY!
     .globl  Powers              // DEBUG ONLY!
+
+    .globl  Primes
 
 
 // Data
@@ -55,6 +57,15 @@ main:
     bl      print
     bl      newline
     bl      newline
+
+    // Call Primes program, then halt
+
+    bl      Primes
+    b       halt
+
+
+
+
 
     // Put in a call to int_to_str_cbase
 
