@@ -1,6 +1,4 @@
 
-+ Transfer to real Raspberry Pi
-
 + Get keyboard input working
 
 + Write memory manager
