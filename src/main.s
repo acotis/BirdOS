@@ -30,6 +30,9 @@ IntString:
 String:
     .asciz "Hello world..."
 
+LongString:
+    .asciz "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"
+
 
 // Code (init)
     
@@ -52,11 +55,11 @@ main:
 
     // Print hello world so we know the screen is working
 
-    ldr     r0, =String
+    ldr     r0, =LongString
     ldr     r1, =0x0000FFFF
-    bl      print
-    bl      newline
-    bl      newline
+    //bl      print
+    //bl      newline
+    //bl      newline
 
     // Call Primes program, then halt
 

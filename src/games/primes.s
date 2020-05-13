@@ -15,7 +15,7 @@
     .align 2
 
 primes_table:
-    .space 101*4
+    .space 1200*4 + 4
 
 IntString:
     .space 33
@@ -75,7 +75,7 @@ ad_loop$:
     .unreq  prime_p
 
 
-// Primes: Display the first 100 primes.
+// Primes: Display the first 1200 primes.
 
 Primes:
     push    {r4, r5, r6, lr}
@@ -84,7 +84,7 @@ Primes:
     next    .req r5
     prime_p .req r6
 
-    mov     count, #100             // Print 100 primes
+    mov     count, #1200            // Print 1200 primes
     mov     next, #2                // Check 2 for primality first
     ldr     prime_p, =primes_table
 

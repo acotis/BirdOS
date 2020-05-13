@@ -17,10 +17,10 @@ Offset:
     .int    4   // y-offset of rirst row of text
 
 LineWidth:
-    .int    79  // Number of characters per line
+    .int    127  // Number of characters per line
 
 LineBuffer:
-    .zero   81  // Buffer for up to a single screen-line of text
+    .zero   128  // Buffer for up to a single screen-line of text
     
     
 // Code
@@ -106,9 +106,15 @@ dt_charcopy_loop$:
     strb    r0, [r5]
     beq     dt_flush_buffer$        
     
-    subs    r7, #1              // If the buffer is full, flush
-    beq     dt_flush_buffer$
+    subs    r7, #1              // If the line is NOT full, jump to the
+    bne     dt_march$           // marching bit
 
+    add     r5, #1              // If it IS full, write a null char and
+    mov     r0, #0              // flush
+    strb    r0, [r5]
+    b       dt_flush_buffer$
+
+dt_march$:
     add     r5, #1              // Else, march forward in buffer,
     add     r8, #1              // increment the column copy, and
     b       dt_charcopy_loop$   // loop back to charcopy 

@@ -1,8 +1,13 @@
 
-DEPS = main.o screen.o text/char_maps.o text/convert.o text/cursor.o text/string.o text/text.o text/text_test.o games/mandelbrot.o games/primes.o
+#DEPS = main.o screen.o text/char_maps.o text/convert.o text/cursor.o text/string.o text/text.o text/text_test.o games/mandelbrot.o games/primes.o
 
+SRCS = $(wildcard *.s)
+DEPS = $(patsubst %.s,build/%.o,$(SRCS))
 
-%.o: %.s
+build/:
+	mkdir build
+
+build/%.o: %.s build/
 	arm-none-eabi-as -o $@ $< -mfpu=vfpv4 -mcpu=cortex-a72 -mfloat-abi=hard
 
 main: $(DEPS)
@@ -19,6 +24,4 @@ flash: main
 clean:
 	rm -f output.elf
 	rm -f main
-	rm -f *.o
-	rm -f text/*.o
-	rm -f games/*.o
+	rm -rf build
