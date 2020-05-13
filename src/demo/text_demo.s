@@ -37,9 +37,11 @@ String3:
 
 String4:
     .ascii "0         1         2         3         4         "
-    .ascii "5         6         7        "
+    .ascii "5         6         7         8         9         "
+    .ascii "0         1         2      "
     .ascii "01234567890123456789012345678901234567890123456789"
-    .asciz "01234567890123456789012345678"
+    .ascii "01234567890123456789012345678901234567890123456789"
+    .asciz "012345678901234567890123456"
 
 String5:
     .asciz "Right arrow -->"
@@ -123,7 +125,7 @@ s_fill_loop$:
     bl      int_to_str  
     
     ldr     r0, =IntString      // Print at a given row and column
-    mov     r1, #11
+    mov     r1, #10
     mov     r2, #44
     ldr     r3, =0xF0000000
     bl      draw_textline
@@ -135,7 +137,7 @@ s_fill_loop$:
     bl      int_to_str
 
     ldr     r0, =IntString
-    mov     r1, #11
+    mov     r1, #10
     mov     r2, #54
     ldr     r3, =0x000FFFFF
     bl      draw_textline
@@ -155,7 +157,7 @@ s_fill_loop$:
     bl      int_to_str
     
     ldr     r0, =IntString
-    mov     r1, #13
+    mov     r1, #12
     mov     r2, #24
     ldr     r3, =0xF0000000
     bl      draw_textline
@@ -167,7 +169,7 @@ s_fill_loop$:
     bl      int_to_str
 
     ldr     r0, =IntString
-    mov     r1, #13
+    mov     r1, #12
     mov     r2, #34
     ldr     r3, =0x000FFFFF
     bl      draw_textline
