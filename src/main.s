@@ -52,6 +52,9 @@ main:
     ldr     sp, =0x18000            // STACK BASE
 
     bl      GPUInit                 // Init a frame buffer
+    bl      VFPInit                 // Init floating-point unit
+
+    bl      Mandelbrot
 
     // Print hello world so we know the screen is working
 
