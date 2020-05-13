@@ -17,6 +17,7 @@
     .globl  Powers              // DEBUG ONLY!
 
     .globl  Primes
+    .globl  Circle
 
 
 // Data
@@ -54,7 +55,7 @@ main:
     bl      GPUInit                 // Init a frame buffer
     bl      VFPInit                 // Init floating-point unit
 
-    bl      Mandelbrot
+    bl      Circle
     b       halt
 
     // Print hello world so we know the screen is working

@@ -1,8 +1,10 @@
 
 // Exports
+    
+    .globl  f32_to_int
 
-.globl  sine
-.globl  cosine
+    .globl  sine
+    .globl  cosine
 
 // Code
 
@@ -78,3 +80,62 @@ sine:
     vmov        s3, r0
     vdiv.f32    term, term, s3
     vadd.f32    ret, term
+
+
+// f32_to_int: convert the float in s0 to a signed int in r0. Round toward
+// zero. In the event of overflow, return zero.
+//
+//  s0 . the float to convert to an int
+//
+// Return:
+//
+//  r0 < the integer value of the float
+//
+
+// Reminder: a 32-bit float has the following structure:
+//
+//      0b 0 10000001 10001010010111000000110
+//         |     |               |
+//       sign exponent        mantissa
+//
+// The exponent field is "biased" in the sense that a value of N for the
+// exponent field translates to an exponent of N-127. The value of the
+// float is:
+//
+//      (-1)^sign * 2^(exponent-127) * 1.(bits of mantissa)
+//
+// This makes the necessary computation fairly easy to see: simply append
+// the bits of the mantissa to a 1 on the left, then shift by the value
+// (exponent - 127 - 23), then multiply by -1 if necessary. Since the
+// recovered mantissa always begins with a 1, this will occur exactly when 
+// the recovered exponent is more than 7.
+
+f32_to_int:
+    value       .req r0
+    exponent    .req r1
+
+    vmov    value, s0
+    ldr     r2, =0x007FFFFF         // Mask for the mantissa
+    and     value, r2               // Extract the mantissa
+    orr     value, #0x00800000      // Add the extra bit
+
+    vmov    exponent, s0
+    ldr     r2, =0x7FE00000         // Mask for the raw exponent
+    and     exponent, r2            // Extract the raw exponent
+    lsr     exponent, #23           // Get rid of the zeros on the right
+    sub     exponent, #150          // Convert to shift value
+
+    cmp     exponent, #7            // If shift > 7, overflow will
+    movgt   r0, #0                  // occur, so return 0
+    bxgt    lr
+
+    cmp     exponent, #0            // Apply exponential shift...
+    lslgt   value, exponent         //   left for positive exponent
+    rsblt   exponent, #0            //   right for negative exponent
+    lsrlt   value, exponent
+
+    vmov    r1, s0
+    tst     r1, #0x80000000         // Extract the sign
+    rsbne   r0, #0                  // If sign bit is 1, negate r0
+
+    bx      lr

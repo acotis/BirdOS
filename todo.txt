@@ -11,4 +11,7 @@
   	      
 + Determine the copyright of the bird image.
 
++ Make int_to_str default to base 10. Remove int_to_str_cbase_old. Update
+  all usages.
+
 + Perform comprehensive test of int_to_str
