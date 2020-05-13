@@ -57,9 +57,9 @@ main:
 
     ldr     r0, =LongString
     ldr     r1, =0x0000FFFF
-    //bl      print
-    //bl      newline
-    //bl      newline
+    bl      print
+    bl      newline
+    bl      newline
 
     // Call Primes program, then halt
 
