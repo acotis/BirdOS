@@ -28,18 +28,19 @@ sine:
 
     vdiv.f32    s2, s0, s1      // s2 = s0 / pi
     vcvt.s32.f32 s2, s2         // s2 . number of multiples of pi below s0
-    bx          lr
     vmul.f32    s1, s1, s2      // s1 = nearest multiple of pi below s0
     vsub.f32    s0, s0, s1      // Subtract those multiples of pi
 
     // If we subtracted an odd number of pi's, reverse the sign of s0
 
-    vmov        s1, #0b01000000000000000000000000000000 // 2
+    ldr         r0, =0b01000000000000000000000000000000 // 2
+    vmov        s1, r0
     vdiv.f32    s1, s2, s1      // s1 = s2 / 2
     vcvt.s32.f32 s2, s1         // s2 = [s2 / 2]
     vcmp.f32    s1, s2          // check if [s2 / 2] == s2 / 2
     vmrs        APSR_nzcv, FPSCR // copy fp compare flags to regular
-    vmov        s1, #0b10111111100000000000000000000000 // -1
+    ldr         r0, =0b10111111100000000000000000000000 // -1
+    vmov        s1, r0
     vmulne.f32  s0, s1          // If not, multiply s0 by -1
 
     // Compute the Maclaurin sum

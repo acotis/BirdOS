@@ -55,7 +55,7 @@ c_pause$:
     subs        r5, #1
     bne         c_pause$
 
-    vmov        s0, s1          // What the heck is happening here?
+    bl          sine
 
     add         r4, #1              // Increment counter
     cmp         r4, #5              // Repeat until counter = 5

@@ -5,7 +5,7 @@ SRCS = $(wildcard **/*.s) $(wildcard *.s)
 DEPS = $(patsubst %.s,%.o,$(SRCS))
 
 %.o: %.s
-	arm-none-eabi-as -o $@ $< -mfpu=vfpv4 -mcpu=cortex-a72 -mfloat-abi=hard
+	arm-none-eabi-as -o $@ $< -mfpu=vfpv2 -mcpu=cortex-a72 -mfloat-abi=hard
 
 main: $(DEPS)
 	arm-none-eabi-ld --no-undefined -o output.elf $(DEPS)
