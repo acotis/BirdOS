@@ -8,7 +8,7 @@ DEPS = $(patsubst %.s,%.o,$(SRCS))
 	arm-none-eabi-as -o $@ $< -mfpu=vfpv4 -mcpu=cortex-a72 -mfloat-abi=hard
 
 main: $(DEPS)
-	arm-none-eabi-ld -o output.elf $(DEPS)
+	arm-none-eabi-ld --no-undefined -o output.elf $(DEPS)
 	arm-none-eabi-objcopy output.elf -O binary main
 
 flash: main

@@ -3,8 +3,15 @@
 
     .globl  f32_to_int
     .globl  int_to_f32
+    .globl  sine
+
+    .globl  int_to_str_cbase
+    .globl  int_to_str
     .globl  print
     .globl  newline
+
+    .globl  GetFrameBufferPointer
+    .globl  GetScreenByteWidth
 
 // Exports 
     
@@ -18,30 +25,42 @@
 IntString:
     .space 33
 
+Space:
+    .asciz " "
+
 // Code
 
     .section .text
     .align 4
 
-Circle:         // .<expont><   m a n t i s s a   >
-    //ldr     r0, =0b11000001011010100111010111010110
-    //vmov    s0, r0
 
-    //bl      f32_to_int          // Convert float to int
-    //rsb     r0, #0
+Circle:
+    mov         r4, #0              // Initialize counter to 0
 
-    ldr     r0, =0x7FFFFFFF
-    bl      int_to_f32
-    vmov    r0, s0              // Flash it back for inspection
+c_loop$:
+    ldr         r0, =IntString      // Convert counter to a string
+    mov         r1, r4
+    bl          int_to_str
 
-    mov     r1, r0
-    ldr     r0, =IntString      // Convert int to string
-    mov     r2, #2
-    bl      int_to_str_cbase
-    
-    ldr     r0, =IntString      // Print resulting string
-    ldr     r1, =0x0000FFFF
-    bl      print
+    ldr         r0, =IntString      // Print the string
+    ldr         r1, =0x00000FF0     // (Green text on black background)
+    bl          print
 
-halt:
-    b       halt
+    ldr         r0, =Space          // Print a space
+    ldr         r1, =0x00000FF0     // (Green text on black background)
+    bl          print
+
+    mov         r5, #0x1000000      // Pause for a beat
+c_pause$:
+    subs        r5, #1
+    bne         c_pause$
+
+    vadd.f32    s2, s0, s1          // What the heck is happening here?
+
+    add         r4, #1              // Increment counter
+    cmp         r4, #5              // Repeat until counter = 5
+    blt         c_loop$
+
+halt:                               // Wait forever
+    b           halt
+

@@ -28,6 +28,7 @@ sine:
 
     vdiv.f32    s2, s0, s1      // s2 = s0 / pi
     vcvt.s32.f32 s2, s2         // s2 . number of multiples of pi below s0
+    bx          lr
     vmul.f32    s1, s1, s2      // s1 = nearest multiple of pi below s0
     vsub.f32    s0, s0, s1      // Subtract those multiples of pi
 
@@ -81,6 +82,8 @@ sine:
     vmov        s3, r0
     vdiv.f32    term, term, s3
     vadd.f32    ret, term
+
+    bx          lr
 
 
 // Here follow the conversions between floating points and integers.
