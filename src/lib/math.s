@@ -2,6 +2,7 @@
 // Exports
     
     .globl  f32_to_int
+    .globl  int_to_f32
 
     .globl  sine
     .globl  cosine
@@ -82,16 +83,7 @@ sine:
     vadd.f32    ret, term
 
 
-// f32_to_int: convert the float in s0 to a signed int in r0. Round toward
-// zero. In the event of overflow, return zero.
-//
-//  s0 . the float to convert to an int
-//
-// Return:
-//
-//  r0 < the integer value of the float
-//
-
+// Here follow the conversions between floating points and integers.
 // Reminder: a 32-bit float has the following structure:
 //
 //      0b 0 10000001 10001010010111000000110
@@ -109,6 +101,17 @@ sine:
 // (exponent - 127 - 23), then multiply by -1 if necessary. Since the
 // recovered mantissa always begins with a 1, this will occur exactly when 
 // the recovered exponent is more than 7.
+
+
+// f32_to_int: convert the float in s0 to a signed int in r0. Round toward
+// zero. In the event of overflow, return zero.
+//
+//  s0 . the float to convert to an int
+//
+// Return:
+//
+//  r0 < the integer value of the float
+//
 
 f32_to_int:
     value       .req r0
@@ -137,5 +140,39 @@ f32_to_int:
     vmov    r1, s0
     tst     r1, #0x80000000         // Extract the sign
     rsbne   r0, #0                  // If sign bit is 1, negate r0
+
+    bx      lr
+
+
+// int_to_f32: Convert a signed integer to a floating point number. 
+// Precision may be lost, but there is no risk of overflow.
+//
+//  r0 . the integer to convert
+//
+// Returns:
+//
+//  s0 < that integer as a floating point
+
+int_to_f32:
+    sign    .req r1
+    expt    .req r2
+    
+    cmp     r0, #0              // Extract the sign of r0
+    movge   sign, #0            // Create the sign bit already in the
+    movlt   sign, #0x80000000   //   correct position
+    rsblt   r0, #0              // Purge the sign from r0
+
+    clz     expt, r0            // Leading zeros of r0
+    lsl     r0, expt            // (Cut the leading 0's out)
+    lsl     r0, #1
+    lsr     r0, #9              // Move the mantissa into position
+
+    rsb     expt, #31           // True exponent (shift factor)
+    add     expt, #127          // Raw exponent
+    lsl     expt, #23           // Move the exponent into position
+
+    orr     expt, sign          // ORR all the components together and
+    orr     r0, expt            // return
+    vmov    s0, r0
 
     bx      lr
