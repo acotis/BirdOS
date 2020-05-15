@@ -33,19 +33,12 @@ sine:
     vmul.f32    s1, s1, s2      // s1 = nearest multiple of pi below s0
     vsub.f32    s0, s0, s1      // Subtract those multiples of pi
 
-    bx          lr
-
     // If we subtracted an odd number of pi's, reverse the sign of s0
 
-    ldr         r0, =0b01000000000000000000000000000000 // 2
-    vmov        s1, r0
-    vdiv.f32    s1, s2, s1      // s1 = s2 / 2
-    vcvt.s32.f32 s2, s1         // s2 = [s2 / 2]
-    vcmp.f32    s1, s2          // check if [s2 / 2] == s2 / 2
-    vmrs        APSR_nzcv, FPSCR // copy fp compare flags to regular
-    ldr         r0, =0b10111111100000000000000000000000 // -1
-    vmov        s1, r0
-    vmulne.f32  s0, s1          // If not, multiply s0 by -1
+    vcvt.s32.f32 s2, s2
+    vmov        r0, s2
+    tst         r0, #1
+    vnegne.f32  s0, s0
 
     // Compute the Maclaurin sum
 
@@ -59,32 +52,36 @@ sine:
     // Second term is -x^3 / 6
 
     vmul.f32    term, x_sqr
-    ldr         r0, =0b01000001011000000000000000000000 // 6
+    mov         r0, #6
     vmov        s3, r0
+    vcvt.f32.s32 s3, s3
     vdiv.f32    term, term, s3
     vsub.f32    ret, term
 
     // Third term is x^5 / 120
 
     vmul.f32    term, x_sqr
-    ldr         r0, =0b01000010010100000000000000000000 // 20
+    mov         r0, #20
     vmov        s3, r0
+    vcvt.f32.s32 s3, s3
     vdiv.f32    term, term, s3
     vadd.f32    ret, term
 
     // Fourth term is -x^7 / 5040
 
     vmul.f32    term, x_sqr
-    ldr         r0, =0b01000010110101000000000000000000 // 42
+    mov         r0, #42
     vmov        s3, r0
+    vcvt.f32.s32 s3, s3
     vdiv.f32    term, term, s3
     vsub.f32    ret, term
 
     // Fifth term is x^9 / 362880
 
     vmul.f32    term, x_sqr
-    ldr         r0, =0b01000011010010000000000000000000 // 72
+    mov         r0, #72
     vmov        s3, r0
+    vcvt.f32.s32 s3, s3
     vdiv.f32    term, term, s3
     vadd.f32    ret, term
 

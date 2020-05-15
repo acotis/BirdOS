@@ -41,7 +41,7 @@ Circle:
     step    .req s4
     x_world .req s5
 
-    mov         x_pix, #0           // Initialize counter to 0
+    mov         x_pix, #50          // Initialize counter to 0
 
     mov         r0, #50             // step = 50 (temporary)
     bl          int_to_f32
@@ -58,7 +58,7 @@ c_loop$:
     vmov        s0, x_world         // Take the sin of the x-coord
     bl          sine
 
-    cmp         x_pix, #200
+    cmp         x_pix, #250
     bne         c_noprint$
 
     ldr         r0, =IntString
@@ -73,6 +73,7 @@ c_noprint$:
     vdiv.f32    s0, s0, step        // Convert to pixel value
     bl          f32_to_int          // Round to integer
     mov         y_pix, r0           // Store in y_pix
+    rsb         y_pix, #300
 
     bl          GetScreenByteWidth  // Compute pixel offset in frame buf
     mul         offset, r0, y_pix
@@ -85,7 +86,7 @@ c_noprint$:
 
     vadd.f32    x_world, step       // Increment x coord
     add         x_pix, #1           // Increment counter
-    cmp         x_pix, #500         // Repeat for 500 steps
+    cmp         x_pix, #600         // Repeat for 500 steps
     blt         c_loop$
 
 halt:                               // Wait forever
