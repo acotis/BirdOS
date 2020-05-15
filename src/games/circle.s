@@ -58,7 +58,7 @@ Circle:
 
 c_loop$:
     vmov        s0, x_world         // Take the sin of the x-coord
-    bl          sine
+    bl          cosine
 
     vdiv.f32    s0, s0, step        // Convert to pixel value
     vcvt.s32.f32 s0, s0

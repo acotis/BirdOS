@@ -87,3 +87,21 @@ sine:
 
     bx          lr
 
+
+
+// cosine: Compute the cosine of the floating point number stored in s0.
+// Store the result in s0.
+//
+//  s0 . number x to take the cosine of
+//
+//  s0 < cosine(x)
+//
+// We will be implementing this as sin(s0 + pi/2). See the sine function
+// above for the real computational work.
+
+cosine:
+    ldr         r0, =0b00111111110010010000111111011010 // pi/2
+    vmov        s1, r0
+    vadd.f32    s0, s0, s1
+    b           sine            // Tail-chaining for efficiency
+    
