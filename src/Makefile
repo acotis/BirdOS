@@ -1,7 +1,5 @@
 
-#DEPS = main.o screen.o text/char_maps.o text/convert.o text/cursor.o text/string.o text/text.o text/text_test.o games/mandelbrot.o games/primes.o
-
-SRCS = $(wildcard **/*.s) $(wildcard *.s)
+SRCS = $(wildcard **/**/*.s) $(wildcard **/*.s) $(wildcard *.s)
 DEPS = $(patsubst %.s,%.o,$(SRCS))
 
 %.o: %.s

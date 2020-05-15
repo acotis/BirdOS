@@ -61,15 +61,15 @@ newline:
 print:
     push    {lr}
     
-    mov     r3, r1          // r3 <- colors
-    ldr     r1, =Cursor     // Load cursor position to (r1, r2)
-    ldr     r2, [r1, #4]        
-    ldr     r1, [r1]
+    mov r3, r1          // r3 <- colors
+    ldr r1, =Cursor     // Load cursor position to (r1, r2)
+    ldr r2, [r1, #4]        
+    ldr r1, [r1]
 
-    bl      draw_textline
+    bl  draw_textline
 
-    ldr     r2, =Cursor     // Store new cursor position
-    str     r0, [r2]
-    str     r1, [r2, #4]
+    ldr r2, =Cursor     // Store new cursor position
+    str r0, [r2]
+    str r1, [r2, #4]
 
-    pop     {pc}
+    pop {pc}
