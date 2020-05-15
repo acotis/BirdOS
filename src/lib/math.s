@@ -28,8 +28,12 @@ sine:
 
     vdiv.f32    s2, s0, s1      // s2 = s0 / pi
     vcvt.s32.f32 s2, s2         // s2 . number of multiples of pi below s0
+    vcvt.f32.s32 s2, s2
+
     vmul.f32    s1, s1, s2      // s1 = nearest multiple of pi below s0
     vsub.f32    s0, s0, s1      // Subtract those multiples of pi
+
+    bx          lr
 
     // If we subtracted an odd number of pi's, reverse the sign of s0
 
