@@ -1,9 +1,10 @@
 
 // Imports
 
-    .globl  print
+    .globl  print               // Library: text/cursor
     .globl  newline
-    .globl  int_to_str_cbase
+
+    .globl  uint_to_str_cbase   // Library: string
 
 // Exports 
 
@@ -114,7 +115,7 @@ p_print_loop$:
 
     ldr     r0, =IntString          // Convert to base-10 integer string
     mov     r2, #10
-    bl      int_to_str_cbase
+    bl      uint_to_str_cbase
 
     ldr     r0, =IntString          // Print it out
     ldr     r1, =0x0000FFFF

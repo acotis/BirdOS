@@ -1,13 +1,14 @@
 
 // Imports
 
-    .globl  GetScreenByteWidth
+    .globl  GetScreenByteWidth      // Library: screen
     .globl  GetFrameBufferPointer
 
-    .globl  print       // for testing
+    .globl  print                   // Library: text/cursor
     .globl  newline
-    .globl  int_to_str
-    .globl  int_to_str_cbase_old
+
+    .globl  uint_to_str             // Library: string
+    .globl  uint_to_str_cbase
     
 // Exports
 
@@ -247,8 +248,8 @@ print_float:
     
     ldr     r0, =Number
     mov     r1, number
-    mov     r2, #1
-    bl      int_to_str_cbase_old
+    mov     r2, #2
+    bl      uint_to_str_cbase
 
     //b pf_end
     
