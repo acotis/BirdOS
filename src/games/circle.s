@@ -44,35 +44,25 @@ Circle:
     mov         x_pix, #50          // Initialize counter to 0
 
     mov         r0, #50             // step = 50 (temporary)
-    bl          int_to_f32
-    vmov        step, s0
+    vmov        step, r0
+    vcvt.f32.s32 step, step
 
     mov         r0, #1              // step = 1/50
-    bl          int_to_f32
+    vmov        s0, r0
+    vcvt.f32.s32 s0, s0
     vdiv.f32    step, s0, step
 
     mov         r0, #0              // Set x-coord to 0
     vmov        x_world, r0
+    vcvt.f32.s32 x_world, x_world
 
 c_loop$:
     vmov        s0, x_world         // Take the sin of the x-coord
     bl          sine
 
-    cmp         x_pix, #250
-    bne         c_noprint$
-
-    ldr         r0, =IntString
-    vmov        r1, s0
-    mov         r2, #2
-    bl          int_to_str_cbase
-    ldr         r0, =IntString
-    ldr         r1, =0x0FF0
-    bl          print
-
-c_noprint$:
     vdiv.f32    s0, s0, step        // Convert to pixel value
-    bl          f32_to_int          // Round to integer
-    mov         y_pix, r0           // Store in y_pix
+    vcvt.s32.f32 s0, s0
+    vmov        y_pix, s0           // Store in y_pix
     rsb         y_pix, #300
 
     bl          GetScreenByteWidth  // Compute pixel offset in frame buf
