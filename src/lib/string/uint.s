@@ -73,9 +73,9 @@ fip_end$:
 uint_to_str_cbase:
     push    {r4, r5, r6, lr}
 
-    address     .req r4
-    value       .req r5
-    base        .req r6
+    address .req r4
+    value   .req r5
+    base    .req r6
 
     mov     address, r0             // Move values out of the way
     mov     value, r1
@@ -85,9 +85,9 @@ uint_to_str_cbase:
     mov     r1, value
     bl      fill_in_powers
 
-    power_p     .req r0
-    power       .req r1
-    digit       .req r2
+    power_p .req r0
+    power   .req r1
+    digit   .req r2
 
 utsc_digits_loop$:
     ldr     power, [power_p]        // Get the next power

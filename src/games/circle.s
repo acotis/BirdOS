@@ -1,14 +1,8 @@
 
 // Imports
 
-    .globl  f32_to_int
-    .globl  int_to_f32
     .globl  sine
-
-    .globl  int_to_str_cbase
-    .globl  int_to_str
-    .globl  print
-    .globl  newline
+    .globl  cosine
 
     .globl  GetFrameBufferPointer
     .globl  GetScreenByteWidth

@@ -10,11 +10,9 @@
     .globl  print               // Cursor abstraction
     .globl  newline
 
-    .globl  int_to_str
+    .globl  int_to_str          // Number formattting
     .globl  int_to_str_cbase    
-
-    .globl  fill_in_powers      // DEBUG ONLY!
-    .globl  Powers              // DEBUG ONLY!
+    .globl  f32_to_str_binary
 
     .globl  Primes
     .globl  Circle
@@ -33,6 +31,9 @@ String:
 
 LongString:
     .asciz "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"
+
+FloatString:
+    .space 100
 
 
 // Code (init)
@@ -55,9 +56,32 @@ main:
     bl      GPUInit                 // Init a frame buffer
     bl      VFPInit                 // Init floating-point unit
 
-    bl      Circle
+    mov     r0, #0                  // s0 = -99
+    mov     r1, #99
+    sub     r0, r1
+    vmov    s0, r0
+    vcvt.f32.s32 s0, s0
+
+    mov     r0, #1                  // s1 = 1
+    vmov    s1, r0
+    vcvt.f32.s32 s1, s1
+
+    vdiv.f32 s0, s1, s0              // s0 = -1/99
+
+    ldr     r0, =FloatString
+    bl      f32_to_str_binary
+
+    ldr     r0, =FloatString
+    ldr     r1, =0x0000FFFF
+    bl      print
+
+    ldr     r0, =String
+    ldr     r1, =0xF000F000
+    bl      print
+
     b       halt
     
+
 
 
 // Use the OK LED to broadcast some bits from a 32-bit number on loop.

@@ -1,9 +1,6 @@
 
 // Exports
     
-    .globl  f32_to_int
-    .globl  int_to_f32
-
     .globl  sine
     .globl  cosine
 
