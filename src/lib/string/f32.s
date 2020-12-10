@@ -21,13 +21,13 @@ f32_to_str_binary:
     vmov     value, s0
 
     tst     value, #0x80000000          // If value is negative,
-    beq     ftsb_notneg
+    beq     ftsb_notneg$
 
     bic     value, #0x80000000          //   make it positive,
     mov     r0, #45                     //   and put a minus sign in.
     strb    r0, [address], #1
 
-ftsb_notneg:
+ftsb_notneg$:
 
     add     r0, address, #1             // Print mantissa
     bic     r1, value, #0xFF000000
@@ -46,14 +46,14 @@ ftsb_notneg:
 
     lsr     value, #23                  // Extract exponent
     subs    value, #127                 // If expt is negative,
-    bge     ftsb_expt_notneg
+    bge     ftsb_expt_notneg$
 
     mov     r0, #0                      //   make it positive,
     sub     value, r0, value
     mov     r0, #45                     //   and put a minus sign in
     strb    r0, [address], #1
 
-ftsb_expt_notneg:
+ftsb_expt_notneg$:
     
     mov     r0, address                 // Print exponent
     mov     r1, value

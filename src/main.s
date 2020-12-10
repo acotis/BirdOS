@@ -8,14 +8,15 @@
     .globl  GPUInit             // Screen
 
     .globl  print               // Cursor abstraction
+    .globl  tab_to
     .globl  newline
 
     .globl  int_to_str          // Number formattting
     .globl  int_to_str_cbase    
     .globl  f32_to_str_binary
 
-    .globl  Primes
-    .globl  Circle
+    .globl  sine                // Math library
+    .globl  cosine
 
 
 // Data
@@ -23,14 +24,14 @@
     .section .data
     .align 4
 
-IntString:
-    .space 33
+xString:
+    .asciz "Value of x"
 
-String:
-    .asciz "Hello world..."
+SineString:
+    .asciz "Value of sin(x)"
 
-LongString:
-    .asciz "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"
+CosineString:
+    .asciz "Value of cosine(x)"
 
 FloatString:
     .space 100
@@ -56,97 +57,90 @@ main:
     bl      GPUInit                 // Init a frame buffer
     bl      VFPInit                 // Init floating-point unit
 
-    mov     r0, #0                  // s0 = -99
-    mov     r1, #99
-    sub     r0, r1
-    vmov    s0, r0
-    vcvt.f32.s32 s0, s0
+    // Print column headers
 
-    mov     r0, #1                  // s1 = 1
-    vmov    s1, r0
-    vcvt.f32.s32 s1, s1
+    ldr     r0, =xString            // First header
+    ldr     r1, =0xFFFF
+    bl      print
 
-    vdiv.f32 s0, s1, s0              // s0 = -1/99
+    mov     r0, #40                 // Tab to column 40
+    bl      tab_to
 
+    ldr     r0, =SineString         // Second header
+    ldr     r1, =0xFFFF
+    bl      print
+
+    mov     r0, #80                 // Tab to column 80
+    bl      tab_to
+
+    ldr     r0, =CosineString       // Third header
+    ldr     r1, =0xFFFF
+    bl      print
+
+    bl      newline
+
+    // Initialize s4 (value of x) and s5 (multiplier)
+
+    mov     r0, #4                  // s4 = 4
+    vmov    s4, r0
+    vcvt.f32.s32 s4, s4
+
+    mov     r0, #2                  // s5 = 2
+    vmov    s5, r0
+    vcvt.f32.s32 s5, s5
+
+    // Sine loop
+
+    counter .req r4
+    color   .req r5
+    
+    mov     counter, #40            // Initialize the counter to 40
+m_loop$:
+    subs    counter, #1             // Tick down the counter
+    beq     halt
+
+    tst     counter, #1                     // Select the color:
+    ldreq   color, =0b0010010101111101      //   even: gentle blue
+    ldrne   color, =0b1111101010010000      //   odd: gentle red
+    //                (red)(grn)(blue)
+
+    vmov    s0, s4                  // Convert s4
+    ldr     r0, =FloatString        
+    bl      f32_to_str_binary
+
+    ldr     r0, =FloatString        // Print s4
+    mov     r1, color
+    bl      print
+
+    mov     r0, #40                 // Tab to column 40
+    bl      tab_to
+
+    vmov    s0, s4                  // Convert sin(s4)
+    bl      sine
+    ldr     r0, =FloatString
+    bl      f32_to_str_binary
+
+    ldr     r0, =FloatString        // Print sin(s4)
+    mov     r1, color
+    bl      print
+
+    mov     r0, #80                 // Tab to column 80
+    bl      tab_to
+
+    vmov    s0, s4
+    bl      cosine
     ldr     r0, =FloatString
     bl      f32_to_str_binary
 
     ldr     r0, =FloatString
-    ldr     r1, =0x0000FFFF
+    mov     r1, color
     bl      print
 
-    ldr     r0, =String
-    ldr     r1, =0xF000F000
-    bl      print
+    bl      newline                 // Go to the next line
+    vdiv.f32 s4, s4, s5             // Divide s4 by 2
 
-    b       halt
+    b       m_loop$                 // Loop
     
-
-
-
-// Use the OK LED to broadcast some bits from a 32-bit number on loop.
-// It starts with the most significant bit, and uses one flash for a one
-// and two flashes for a zero. This method never returns.
-//
-//     r0 . message to broadcast
-//     r1 . number of bits to broadcast
-    
-broadcast:
-    signal      .req r0         // Bits to broadcast
-    maskreset   .req r1         // Mask corresponding to top bit
-    mask        .req r2         // Current mask
-    addr        .req r3         // Address of GPIO controller
-    value       .req r4         // GPIO message to toggle OK LED
-    timer       .req r5         // Timer used in timing the flashes
-    flashcount  .req r6         // Used in a loop later on
-    
-    ldr     addr, =0x20200000   // Enable output to 16th GPIO pin
-    mov     value, #1
-    lsl     value, #18
-    str     value, [addr, #4]
-
-    mov     value, #1           // We'll be toggling GPIO pin #16
-    lsl     value, #16
-    
-    mov     mask, #1            // Slighly ugly code to get the value
-    sub     r1, #1              // [1 << (r1-1)] into maskreset, which
-    lsl     maskreset, mask, r1 // is r1.
-
-    mov     mask, maskreset
-b_loop$:
-    tst     signal, mask        // Check the value of the current bit
-    moveq   flashcount, #2      // For a zero, flash twice
-    movne   flashcount, #1      // For a one, flash once
-    
-b_flash$:
-    str     value, [addr, #40]  // Turn LED on
-    mov     timer, #0x200000    // Wait for 0x200k ticks
-    bl      countdown$
-
-    str     value, [addr, #28]  // Turn LED off
-    mov     timer, #0x200000    // Wait for 0x200k ticks
-    bl      countdown$
-
-    subs    flashcount, #1      // Repeat for each flash
-    bne     b_flash$
-
-    lsrs    mask, #1            // Update mask to cover the next bit.
-    moveq   mask, maskreset     // If this was the last bit, reset the
-    moveq   timer, #0x3000000   // mask and wait 0x3m ticks.
-    movne   timer, #0xC00000    // Else, wait for only 0xc00k ticks.
-    bl      countdown$
-
-    b       b_loop$             // Repeat forever
-    
-
-// Count down the value in r5 to zero, then return. Don't touch any
-// other values
-    
-countdown$:
-    subs    r5, #1
-    moveq   pc, lr
-    b       countdown$
-
 
 // Do nothing forever
 

@@ -6,10 +6,10 @@
 // Exports
 
     .globl  set_cursor
+    .globl  tab_to
     .globl  newline
     .globl  print
 
-    .globl  Cursor // DEBUG ONLY
     
 // Data
 
@@ -34,6 +34,17 @@ set_cursor:
     ldr     r2, =Cursor
     str     r0, [r2]
     str     r1, [r2, #4]
+    mov     pc, lr
+
+// tab: if the current column is less than r0, set it to t0
+//
+//  r0 . column to tab to
+
+tab_to:
+    ldr     r1, =Cursor             // r1 . address of cursor data
+    ldr     r2, [r1, #4]            // r2 . current column
+    cmp     r0, r2                  // if r0 > r2
+    strgt   r0, [r1, #4]            //   r0 is the new column
     mov     pc, lr
 
 // newline: move the cursor to the beginning of the next line. no args.
