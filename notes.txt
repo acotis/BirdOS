@@ -14,3 +14,31 @@ Things to write about in a tutorial:
     + Signed/unsigned f32/f64 data type stuff
 
     + When exceptions arise and how to handle them
+
+    + That the vcvt.s32.f32 converts to an int-style integer, not a 
+      float-style integer.
+
+
+Note about readability:
+
+I find it difficult to read code when registers aliases are intermingled
+with register codes, like here:
+
+    x_pix   .req r4
+    y_pix   .req r5
+    offset  .req r6
+    step    .req s4
+    x_world .req s5
+
+    mov         x_pix, #50          // Initialize counter to 0
+
+    mov         r0, #50             // step = 50 (temporary)
+    vmov        step, r0
+    vcvt.f32.s32 step, step
+
+    mov         r0, #1              // step = 1/50
+    vmov        s0, r0
+    vcvt.f32.s32 s0, s0
+    vdiv.f32    step, s0, step
+
+Code snippet taken from games/circle.s on 2020 Dec 08.
