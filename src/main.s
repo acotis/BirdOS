@@ -63,14 +63,14 @@ main:
     ldr     r1, =0xFFFF
     bl      print
 
-    mov     r0, #40                 // Tab to column 40
+    mov     r0, #20                 // Tab to column 20
     bl      tab_to
 
     ldr     r0, =SineString         // Second header
     ldr     r1, =0xFFFF
     bl      print
 
-    mov     r0, #80                 // Tab to column 80
+    mov     r0, #40                 // Tab to column 40
     bl      tab_to
 
     ldr     r0, =CosineString       // Third header
@@ -81,7 +81,7 @@ main:
 
     // Initialize s4 (value of x) and s5 (multiplier)
 
-    mov     r0, #4                  // s4 = 4
+    mov     r0, #40                 // s4 = 4
     vmov    s4, r0
     vcvt.f32.s32 s4, s4
 
@@ -106,31 +106,31 @@ m_loop$:
 
     vmov    s0, s4                  // Convert s4
     ldr     r0, =FloatString        
-    bl      f32_to_str_binary
+    bl      f32_to_str_decimal
 
     ldr     r0, =FloatString        // Print s4
+    mov     r1, color
+    bl      print
+
+    mov     r0, #20                 // Tab to column 20
+    bl      tab_to
+
+    vmov    s0, s4                  // Convert sin(s4)
+    bl      sine
+    ldr     r0, =FloatString
+    bl      f32_to_str_decimal
+
+    ldr     r0, =FloatString        // Print sin(s4)
     mov     r1, color
     bl      print
 
     mov     r0, #40                 // Tab to column 40
     bl      tab_to
 
-    vmov    s0, s4                  // Convert sin(s4)
-    bl      sine
-    ldr     r0, =FloatString
-    bl      f32_to_str_binary
-
-    ldr     r0, =FloatString        // Print sin(s4)
-    mov     r1, color
-    bl      print
-
-    mov     r0, #80                 // Tab to column 80
-    bl      tab_to
-
     vmov    s0, s4
     bl      cosine
     ldr     r0, =FloatString
-    bl      f32_to_str_binary
+    bl      f32_to_str_decimal
 
     ldr     r0, =FloatString
     mov     r1, color

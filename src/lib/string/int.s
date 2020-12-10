@@ -3,6 +3,8 @@
 
     .globl  uint_to_str
     .globl  uint_to_str_cbase
+    .globl  int_to_str
+    .globl  int_to_str_cbase
 
 // Data
 
@@ -125,7 +127,6 @@ utsc_digit_loop_end$:
     .unreq  digit
     
 
-    
 // uint_to_str: convert the uint r1 into a string and store the result in
 // memory location r0.
 //  
@@ -133,8 +134,30 @@ utsc_digit_loop_end$:
 //  r1 . the int to convert
 
 uint_to_str:
-    push    {lr}
     mov     r2, #0x10
-    bl      uint_to_str_cbase
-    pop     {pc}
+    b       uint_to_str_cbase
 
+
+// int_to_str_cbase: convert the int r1 into a string in base r2 and
+// store the result in memory location r0.
+//
+//  r0 . the address to store the result-string at
+//  r1 . the int to convert
+//  r2 . the base to use
+
+int_to_str_cbase:
+    cmp     r1, #0                  // If r1 > 0, tailcall uint
+    bge     uint_to_str_cbase
+    
+    mov     r3, #45                 // Else:
+    strb    r3, [r0], #1            //   put a dash in the string,
+    neg     r1, r1                  //   negate the value,
+    b       uint_to_str_cbase       //   and tailcall uint
+
+
+// int_to_str: convert the int t1 into a string and store the result in
+// memory location r0.
+
+int_to_str:
+    mov     r2, #0x10
+    b       int_to_str_cbase
