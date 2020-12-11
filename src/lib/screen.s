@@ -94,8 +94,8 @@ mr_status_loop$:
     mov     pc, lr
 
 
-// GPUInit: Set up a frame buffer the real way. Return whatever message the
-// GPU sends back.
+// GPUInit: Set up a frame buffer the real way. Return whatever message
+// the GPU sends back.
     
 GPUInit:    
     push    {lr}

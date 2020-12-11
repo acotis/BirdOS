@@ -36,15 +36,16 @@ set_cursor:
     str     r1, [r2, #4]
     mov     pc, lr
 
-// tab: if the current column is less than r0, set it to t0
+// tab: set the current column to r0.
 //
 //  r0 . column to tab to
 
 tab_to:
     ldr     r1, =Cursor             // r1 . address of cursor data
-    ldr     r2, [r1, #4]            // r2 . current column
-    cmp     r0, r2                  // if r0 > r2
-    strgt   r0, [r1, #4]            //   r0 is the new column
+    //ldr     r2, [r1, #4]            // r2 . current column
+    //cmp     r0, r2                  // if r0 > r2
+    //strgt   r0, [r1, #4]            //   r0 is the new column
+    str     r0, [r1, #4]
     mov     pc, lr
 
 // newline: move the cursor to the beginning of the next line. no args.

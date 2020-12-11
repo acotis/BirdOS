@@ -6,6 +6,7 @@
 // Imports
 
     .globl  GPUInit             // Screen
+    .globl  VFPInit             // Floating-point unit
 
     .globl  print               // Cursor abstraction
     .globl  tab_to
@@ -17,6 +18,8 @@
 
     .globl  sine                // Math library
     .globl  cosine
+
+    .globl  StringDemo
 
 
 // Data
@@ -57,6 +60,12 @@ main:
     bl      GPUInit                 // Init a frame buffer
     bl      VFPInit                 // Init floating-point unit
 
+    bl      StringDemo
+
+    b       halt
+
+
+sine_demo:
     // Print column headers
 
     ldr     r0, =xString            // First header

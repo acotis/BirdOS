@@ -12,7 +12,7 @@
     
 // Exports
     
-    .globl  text_demo
+    .globl  TextDemo
 
     
 // Strings to display
@@ -59,7 +59,7 @@ IntString:
     .section .text
     .align  2
     
-text_demo:
+TextDemo:
     push    {r4, lr}
     
     // Fill "String" with every extended-ascii char code
