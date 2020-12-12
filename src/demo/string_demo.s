@@ -18,6 +18,8 @@
     .globl  f32_to_str_binary   // Library: string/f32
     .globl  f32_to_str_decimal
 
+    .globl  break_float         // Library: math (temporary)
+
 // Data
 
 .section .data
@@ -30,14 +32,16 @@ NumString:
 
 Floats:
     .word   0b00111111100000000000000000000000
-    .word   0b00111111100000000000000000000000
-    .word   0b00111111100000000000000000000000
+    .word   0b10111111100000000000000000000000
+    .word   0b01111111100000000000000000000000
+    .word   0b01111111011111111111111111111111
     .word   0
 
 Descriptions:
     .asciz  "Number 1"
-    .asciz  "Number 1 (again)"
-    .asciz  "Number 2 (a third time)"
+    .asciz  "Number -1"
+    .asciz  "Positive infinity"
+    .asciz  "Largest finite number"
     
 
 // Code

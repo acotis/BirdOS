@@ -20,6 +20,7 @@
     .globl  cosine
 
     .globl  StringDemo
+    .globl  MathDemo
 
 
 // Data
@@ -60,7 +61,7 @@ main:
     bl      GPUInit                 // Init a frame buffer
     bl      VFPInit                 // Init floating-point unit
 
-    bl      StringDemo
+    bl      MathDemo
 
     b       halt
 
