@@ -26,7 +26,7 @@ f32_to_str_binary:
     value   .req r5
 
     mov     address, r0
-    vmov     value, s0
+    vmov    value, s0
 
     tst     value, #0x80000000          // If value is negative,
     beq     ftsb_notneg$

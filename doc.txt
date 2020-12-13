@@ -1,23 +1,40 @@
 
 BirdOS/
-    src/            
-        Makefile            Makefile
-        main.s              Main assembly file
-        screen.s            Getting a frame buffer from the GPU
+   src/            
+      Makefile              Makefile
+      main.s                Main assembly file
 
-        text/       
-            char_maps.s     Character maps (just data)
-            string.s        Code for drawing strings anywhere on-screen
-            text.s          Code for drawing pretty even lines of text
-            cursor.s        Support for the "cursor" abstraction
-            convert.s       Convert a number into a string in various bases
-            text_test.s     Test all of the above features
+      demo/                 Demonstration of each library
+         math_demo.s           math library
+         string_demo.s         string library
+         text_demo.s           text library
 
-    files/                  Miscellaneous files
+      games/                Programs interesting in their own right
+         circle.s              Draw a circle (under construction)
+         mandelbrot.s          Draw the mandelbrot fractal
+         primes.s              Print a list of primes
 
-    doc.txt                 This file
-    notes.txt               Scratch notes
-    todo.txt                Todo file
+      lib/                  Libraries of functions
+         math.s                Math functions (sine, cosine, etc)
+         screen.s              Getting a frame buffer from the GPU
+         vfp.s                 Initialize and configure the vfp
+
+         string/               String functions
+            int.s                 Convert ints to strings
+            f32.s                 Convert 32-bit floats to strings
+
+         text/                 Text functions
+            char_maps.s           Character maps (just data)
+            string.s              Draw strings anywhere on-screen
+            text.s                Draw pretty even lines of text
+            cursor.s              Implement the "cursor" abstraction
+
+   files/                   Miscellaneous files
+
+   doc.txt                  This file
+   notes.txt                Scratch notes
+   todo.txt                 Todo file
+   README.md                Readme file for the github
 
 
 TEXT

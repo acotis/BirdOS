@@ -14,6 +14,7 @@
 .globl  newline
 
 .globl  break_float         // Library: math
+.globl  log
 
 // Data
 
@@ -31,11 +32,27 @@ String:
 MathDemo:
     push    {r4, r5, r6, lr}
 
+    ldr     r0, =0b01000000000000000000000000000000
+    mov     r0, #5
+    vmov    s0, r0
+    vcvt.f32.s32 s0, s0
+    bl      log
+
+    ldr     r0, =String
+    bl      f32_to_str_decimal
+
+    ldr     r0, =String
+    ldr     r1, =0x0000f000
+    bl      print
+
+    pop     {r4, r5, r6, pc}
+    
+
     sign    .req r4
     expt    .req r5
     mant    .req r6
 
-    ldr     r0, =0b00000000000010010000000000000000
+    ldr     r0, =0b01000000000000000000000000000000
     vmov    s0, r0
     bl      break_float
 

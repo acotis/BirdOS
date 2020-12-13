@@ -3,6 +3,7 @@
     
     .globl  sine
     .globl  cosine
+    .globl  log
 
     .globl  break_float
 
@@ -169,4 +170,92 @@ bf_inf_or_nan$:
     mov     r0, #4              // Else, it's NaN
     mov     r2, mantissa
     mov     pc, lr
+
+
+// log: Compute the natural log of s0. Return NaN for negative inputs and
+// NaN. Return -Inf for +0 and +Inf for +Inf.
+//
+//   s0 . number to take the natural log of
+//
+//   s0 < natural log of that number
+//
+// Nota bene: This function is designed so as to result in as few jumps
+// as possible for the common case, a positive normal or denormal number.
+
+log:
+    push    {r4, lr}
+    vmov    r4, s0
+    bl      break_float
+
+    cmp     r1, #1              // If negative or NaN, jump out
+    cmpne   r0, #4
+    beq     l_negative_or_nan$
+
+    cmp     r0, #2              // If +0 or +Inf, jump out
+    bge     l_zero_or_inf$
+
+    // Beyond this point, we can assume we're dealing with a positive
+    // normal or denormal number.
+    //
+    //   r2 . exponent
+    //   r3 . mantissa
+    //
+    // Since x = 2^r2 * r3 we know log(x) = r2*log(2) + log(r3). The
+    // issue is that we'd like to compute the second part using a
+    // Maclaurin series for the function log(1 - x), but the x-value
+    // could be as high as .9999999 or so, and if it is, it will
+    // converge *very* slowly. So we will instead compute the output as
+    // (r2 + 1) * log(2) + log(r3 / 2).
+
+    ldr     r0, =0b00111111001100010111001000011000
+    vmov    s0, r0
+    add     r2, #1
+    vmov    s1, r2
+    vcvt.f32.s32 s1, s1
+    vmul.f32 s0, s1
+
+    // Now we compute the log of half the mantissa.
+
+    bic     r3, #0x00800000
+    orr     r3, #0x3f000000
+    vmov    s1, r3
+    mov     r0, #1
+    vmov    s2, r0
+    vcvt.f32.s32 s2, s2
+    vsub.f32 s1, s2, s1
+
+    // Now we do the Maclaurin series: -x - x^2/2 - x^3/3 - ...
+    //
+    //   s0 . contribution of exponent to return value
+    //   s1 . input to log function (1 - r3/2)
+    //   s2 . value of 1 (accumulator for powers of s1)
+
+    mov         r0, #1
+l_maclaurin_loop$:
+    vmul.f32    s2, s1
+    vmov        s3, r0
+    vcvt.f32.s32 s3, s3
+    vdiv.f32    s3, s2, s3
+    vsub.f32    s0, s3
+
+    add         r0, #1
+    cmp         r0, #20
+    ble         l_maclaurin_loop$
+
+    pop         {r4, pc}
+
+l_negative_or_nan$:
+    ldr     r0, =0x7f800001     // Negatives and NaN: return NaN
+    vmov    s0, r0
+    pop     {r4, pc}
+
+l_zero_or_inf$:
+    cmp     r0, #2
+    ldreq   r0, =0xff800000     // +0: return -Inf
+    ldrne   r0, =0x7f800000     // +Inf: return +Inf
+    vmov    s0, r0
+    pop     {r4, pc}
     
+
+
+

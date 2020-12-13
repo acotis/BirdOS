@@ -11,8 +11,6 @@
   	      
 + Determine the copyright of the bird image.
 
-+ Add signed versions of uint_to_str[_cbase]
-
 + Perform comprehensive test of [u]int_to_str[_cbase]
 
 + Move the graphing code in circle.s to a new math_demo.s, then implement
@@ -21,3 +19,6 @@
 + Change implementation of cosine to be a Mclaurin series? (In the current
   implementation, very small values will be swamped by the addition of
   pi/2 due to floating-point mechanics.)
+
++ Establish the convention that functions which accept or return floats
+  are allowed to trash s0-s3 in addition to trashing r0-r3.
