@@ -113,9 +113,13 @@ cosine:
 //  r2 < exponent if applicable, payload for NaN
 //  r3 < mantissa if applicable
 //
-// Nota bene: the mantissa will always include the leading 1 and will
+// Nota bene: The mantissa will always include the leading 1 and will
 // always be 24 bits long, regardless of whether the float is normal or
 // subnormal.
+//
+// Nota bene #2: This method is currently written in a way that avoids
+// memory-writes, on the assumption that it will be used in several math
+// methods and that I'll want those to be uber-fast.
 
 break_float:
     sign        .req r1

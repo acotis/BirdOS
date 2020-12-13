@@ -34,14 +34,34 @@ Floats:
     .word   0b00111111100000000000000000000000
     .word   0b10111111100000000000000000000000
     .word   0b01111111100000000000000000000000
+    .word   0b11111111100000000000000000000000
+    .word   0b00000000000000000000000000000001
+    .word   0b10000000000000000000000000000001
+    .word   0b00000000000000000000000000000000
+    .word   0b10000000000000000000000000000000
     .word   0b01111111011111111111111111111111
-    .word   0
+    .word   0b11111111011111111111111111111111
+    .word   0b01111111100000000000010000000000
+    .word   0b11111111111111111111111111111110
+    .word   0b11111111100000000000000000000001
+    .word   0b01000000010010010000111111011011
+    .word   3
 
 Descriptions:
     .asciz  "Number 1"
     .asciz  "Number -1"
     .asciz  "Positive infinity"
+    .asciz  "Negative infinity"
+    .asciz  "Smallest positive number (subnormal)"
+    .asciz  "Largest negative number (subnormal)"
+    .asciz  "Positive zero"
+    .asciz  "Negative zero"
     .asciz  "Largest finite number"
+    .asciz  "Smallest finite number"
+    .asciz  "Positive NaN"
+    .asciz  "Negative NaN"
+    .asciz  "Another negative NaN"
+    .asciz  "Pi"
     
 
 // Code
@@ -169,8 +189,8 @@ StringDemo:
     ldr     r4, =Floats
     ldr     r5, =Descriptions
 sd_floats_loop$:
-    ldr     r0, [r4]                // Load value just to see if it's 0
-    teq     r0, #0
+    ldr     r0, [r4]                // Load value just to see if it's 3
+    teq     r0, #3
     beq     sd_floats_end$
 
     mov     r0, #40                 // Tab to column 40
@@ -227,7 +247,7 @@ sd_float_print$:
 
     // Print out the verb description of this number.
 
-    mov     r0, #90                 // Tab to column 90
+    mov     r0, #88                 // Tab to column 88
     bl      tab_to
 
     mov     r0, r5                  // Print description in green

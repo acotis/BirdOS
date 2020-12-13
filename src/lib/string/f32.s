@@ -6,8 +6,10 @@
 
 // Imports
 
-    .globl  uint_to_str_cbase
+    .globl  uint_to_str_cbase       // Library: string/int
     .globl  int_to_str_cbase
+    
+    .globl  break_float             // Library: math
 
 // Code
 
@@ -71,7 +73,94 @@ ftsb_notneg$:
 //  s0 . the 32-bit float to convert
 
 f32_to_str_decimal:
-    address     .req r0
+    push            {r4, lr}
+    mov             r4, r0
+
+    bl              break_float             // Get components
+
+    // If it's negative, put an equals sign and make it positive.
+
+    cmp             r1, #0                  // If positive,
+    beq             ftsd_notneg$            //   skip this part
+
+    mov             r1, #45                 // Else:
+    strb            r1, [r4], #1            //   put a negative sign
+    vneg.f32        s0, s0                  //   and make it positive
+
+    // The state of the registers is now:
+    //
+    //   r0 . type of float (normal, subnormal, zero, inf, nan)
+    //   r1 . scratch
+    //   r2 . expt or payload of float as applicable
+    //   r3 . mantissa of float if applicable
+    //   r4 . address to store the string at
+
+ftsd_notneg$:
+    cmp             r0, #0                  // If it's normal, jump to the
+    beq             ftsd_normal$            //   main method
+
+    cmp             r0, #1                  // If it's subnormal, jump to
+    beq             ftsd_subnormal$         //   the subnormal handler
+
+    cmp             r0, #2                  // If it's zero, jump to the
+    beq             ftsd_zero$              //   zero handler
+    
+    cmp             r0, #3                  // If it's inf, jump to the
+    beq             ftsd_inf$               //   inf handler
+
+    mov             r1, #'N'                // Else, write "NaN" and ret
+    strb            r1, [r4], #1
+    mov             r1, #'a'
+    strb            r1, [r4], #1
+    mov             r1, #'N'
+    strb            r1, [r4], #1
+    mov             r1, #0
+    strb            r1, [r4], #1
+    pop             {r4, pc}
+
+ftsd_subnormal$:
+    mov             r1, #'s'                // Write "subnormal" and ret
+    strb            r1, [r4], #1
+    mov             r1, #'u'
+    strb            r1, [r4], #1
+    mov             r1, #'b'
+    strb            r1, [r4], #1
+    mov             r1, #'n'
+    strb            r1, [r4], #1
+    mov             r1, #'o'
+    strb            r1, [r4], #1
+    mov             r1, #'r'
+    strb            r1, [r4], #1
+    mov             r1, #'m'
+    strb            r1, [r4], #1
+    mov             r1, #'a'
+    strb            r1, [r4], #1
+    mov             r1, #'l'
+    strb            r1, [r4], #1
+    mov             r1, #0
+    strb            r1, [r4], #1
+    pop             {r4, pc}
+
+ftsd_zero$:
+    mov             r1, #'0'
+    strb            r1, [r4], #1
+    mov             r1, #0
+    strb            r1, [r4], #1
+    pop             {r4, pc}
+
+ftsd_inf$:
+    mov             r1, #'I'
+    strb            r1, [r4], #1
+    mov             r1, #'n'
+    strb            r1, [r4], #1
+    mov             r1, #'f'
+    strb            r1, [r4], #1
+    mov             r1, #0
+    strb            r1, [r4], #1
+    pop             {r4, pc}
+
+ftsd_normal$:
+    address     .req r4
     expt        .req r1
     dig_count   .req r2
     value       .req s0
@@ -79,20 +168,6 @@ f32_to_str_decimal:
     next_pv     .req s2
     ten         .req s3
 
-    // If value is negative, store a minus sign and make it positive.
-
-    mov             r3, #0                  // s1 = 0
-    vmov            s1, r3
-    vcvt.f32.s32    s1, s1
-    vcmp.f32        s0, s1                  // if s0 >= s1:
-    vmrs            APSR_nzcv, FPSCR
-    bge             ftsd_notneg$            //   skip this part
-
-    mov             r3, #45
-    strb            r3, [r0], #1
-    vneg.f32        s0, s0
-
-ftsd_notneg$:
     mov             expt, #0                // expt = 0
 
     mov             r3, #1                  // place_val = 1
@@ -163,8 +238,11 @@ ftsd_expt$:
     strb            r3, [address], #1
 
     // Address and expt are already in r0 and r1, so we can just jump
-    // to int_to_str_cbase after specifing base 10.
+    // to int_to_str_cbase after specifing base 10. And yes, we pop *lr*
+    // and not pc because of the tail-chain call.
 
+    mov             r0, address
+    pop             {r4, lr}
     mov             r2, #10
     b               int_to_str_cbase
 

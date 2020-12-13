@@ -61,7 +61,7 @@ main:
     bl      GPUInit                 // Init a frame buffer
     bl      VFPInit                 // Init floating-point unit
 
-    bl      MathDemo
+    bl      StringDemo
 
     b       halt
 
